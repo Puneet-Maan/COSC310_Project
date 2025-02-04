@@ -1,6 +1,6 @@
 -- Create the database (optional, depending on your setup)
-CREATE DATABASE IF NOT EXISTS course_registration;
-USE course_registration;
+CREATE DATABASE IF NOT EXISTS nullPointersDatabase;
+USE nullPointersDatabase;
 
 -- Table: accounts (stores user information for students and admins)
 CREATE TABLE accounts (

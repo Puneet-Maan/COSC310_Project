@@ -1,7 +1,9 @@
+/* Main app container */
 .App {
   text-align: center;
 }
 
+/* App logo styles */
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -13,6 +15,7 @@
   }
 }
 
+/* App header styles */
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -24,6 +27,7 @@
   color: white;
 }
 
+/* App link styles */
 .App-link {
   color: #61dafb;
 }
@@ -35,4 +39,29 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.app-container {
+  text-align: center;
+  margin-top: 50px;
+}
+
+nav ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+nav ul li {
+  display: inline;
+  margin: 0 10px;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: bold;
+}
+
+nav ul li a:hover {
+  color: #0056b3;
 }
