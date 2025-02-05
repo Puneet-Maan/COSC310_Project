@@ -70,3 +70,14 @@ CREATE TABLE course_lab_sections (
     lab_room VARCHAR(50) NULL,              -- Lab location
     FOREIGN KEY (section_id) REFERENCES sections(section_id) ON DELETE CASCADE
 );
+
+-- Table: waitlist (stores students waiting for full courses)
+CREATE TABLE waitlist (
+    waitlist_id INT AUTO_INCREMENT PRIMARY KEY, -- Unique waitlist entry ID
+    student_id INT NOT NULL,                    -- References the student who is waiting
+    section_id INT NOT NULL,                    -- References the course section the student wants to join
+    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Timestamp for when the student was added to the waitlist
+    FOREIGN KEY (student_id) REFERENCES accounts(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (section_id) REFERENCES sections(section_id) ON DELETE CASCADE,
+    UNIQUE (student_id, section_id)             -- Ensure a student can't be on the waitlist for the same course twice
+);
