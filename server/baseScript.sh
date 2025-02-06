@@ -105,5 +105,3 @@ INSERT INTO course_lab_sections (section_id, lab_schedule, lab_room) VALUES
 
 # Execute the SQL command
 psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME -c "$SQL_COMMAND"
-# Execute the SQL command
-psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME -c "$SQL_COMMAND"
