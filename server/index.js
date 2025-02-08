@@ -1,6 +1,7 @@
-const express = require('express');
-const pool = require('./routes/db'); // Import MySQL connection
-const authRoutes = require('./routes/auth'); // Import authentication routes
+import express from 'express';
+import pool from './routes/db.js'; // Import MySQL connection
+import authRoutes from './routes/auth.js'; // Import authentication routes
+
 const app = express();
 
 app.use(express.json()); // Middleware to parse JSON request bodies
@@ -12,7 +13,7 @@ app.get("/api", (req, res) => {
 });
 
 // Test route to check the database connection
-app.get('/api/test', async (req, res) => {
+app.get('/api/test-db', async (req, res) => {
   try {
     const [rows] = await pool.query('SELECT NOW()'); // Query the database to get the current time
     res.json({ message: 'Database connected!', time: rows[0]}); // Respond with the current time
@@ -26,3 +27,5 @@ app.get('/api/test', async (req, res) => {
 app.listen(5000, () => {
   console.log("Server is running on port 5000");
 });
+
+export default app;

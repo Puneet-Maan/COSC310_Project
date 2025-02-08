@@ -20,13 +20,15 @@ function Home() {
 
 function App() {
   return (
-    <Router>
-      <Switch>
-        <Route exact path="/" component={Home} />
-        <Route path="/login" component={LogIn} />
-        {/* Add more routes to other features here */}
-      </Switch>
-    </Router>
+    <div className="min-h-screen bg-white text-black">
+      <Router>
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/login" component={LogIn} />
+          {/* Add more routes to other features here */}
+        </Switch>
+      </Router>
+    </div>
   );
 }
 

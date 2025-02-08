@@ -1,6 +1,7 @@
-const express = require('express');
+import express from 'express';
+import pool from './db.js'; // Import MySQL connection
+
 const router = express.Router();
-const pool = require('./db'); // Import MySQL connection
 
 // Define the login route
 router.post('/login', async (req, res) => {
@@ -20,4 +21,4 @@ router.post('/login', async (req, res) => {
   }
 });
 
-module.exports = router; // Export the router
+export default router; // Export the router

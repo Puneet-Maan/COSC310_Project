@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { Link, useHistory } from 'react-router-dom';
 
@@ -37,7 +37,7 @@ function LogIn() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 text-black">
       <div className="bg-white p-6 rounded shadow-md w-full max-w-sm mb-4">
         <h2 className="text-2xl font-bold mb-4">Login</h2>
         {error && <p className="text-red-500 mb-4">{error}</p>}
@@ -79,7 +79,7 @@ function LogIn() {
         </div>
       </div>
       {isLoggedIn && (
-        <div className="bg-white p-6 rounded shadow-md w-full max-w-sm text-center">
+        <div className="bg-white p-6 rounded shadow-md w-full max-w-sm text-center mb-4">
           <h2 className="text-2xl font-bold mb-4">Welcome, {userName}!</h2>
           <button 
             onClick={handleLogout} 
