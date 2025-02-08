@@ -48,6 +48,28 @@ docker exec -it nullPointers-db mysql -u root -p
 
 (It will prompt for a password, the answer is: `root`)
 
+### How to Run Tests
+
+1. Open terminal in the server folder:
+
+   ```bash
+   cd server
+   ```
+
+2. Make sure dependencies are installed:
+
+   ```bash
+   npm install
+   ```
+
+3. Once packages are installed, run the tests:
+
+   ```bash
+   npm test
+   ```
+
+   This will run all tests for all test files in the test folder.
+
 ## Key Notes
 
 - **Client folder** is the front end.
