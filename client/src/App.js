@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import LogIn from './logIn';
+import AccRegister from './AccRegister';
 
 function Home() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/login" component={LogIn} />
+          <Route path="/register" component={AccRegister} />
           {/* Add more routes to other features here */}
         </Switch>
       </Router>

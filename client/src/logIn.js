@@ -73,9 +73,9 @@ function LogIn() {
         </form>
         <div className="text-center text-sm text-gray-500">
           Don't have an account?{" "}
-          <a href="/signup" className="text-blue-500 hover:underline">
+          <Link to="/register" className="text-blue-500 hover:underline">
             Create an account
-          </a>
+          </Link>
         </div>
       </div>
       {isLoggedIn && (
