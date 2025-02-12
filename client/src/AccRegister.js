@@ -11,7 +11,13 @@ function AccRegister() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
   const history = useHistory();
+
+  const validatePassword = (password) => {
+    const regex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+    return regex.test(password);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,16 +25,26 @@ function AccRegister() {
       setError('Passwords do not match.');
       return;
     }
+    if (!validatePassword(password)) {
+      setError('Password must be at least 8 characters long and include an uppercase letter and a number.');
+      return;
+    }
     try {
       const response = await axios.post('/api/register', { email, password, name, phone });
       if (response.data.success) {
-        history.push('/login');
+        setSuccess(true);
       } else {
-        setError('Registration failed. Please try again.');
+        setError(`Registration failed: ${response.data.error}`);
       }
     } catch (err) {
-      setError('An error occurred. Please try again.');
+      console.error('Error during registration:', err);
+      setError(`An error occurred: ${err.response ? err.response.data.error : err.message}`);
     }
+  };
+
+  const handleClose = () => {
+    setSuccess(false);
+    history.push('/login');
   };
 
   return (
@@ -112,6 +128,19 @@ function AccRegister() {
       >
         Back to Home
       </button>
+      {success && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded shadow-md text-center">
+            <h2 className="text-2xl font-bold mb-4">Account Successfully Created</h2>
+            <button 
+              onClick={handleClose} 
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+            >
+              Go to Login
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
