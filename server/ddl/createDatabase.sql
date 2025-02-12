@@ -20,7 +20,7 @@ CREATE TABLE programs (
 CREATE TABLE accounts (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL CHECK (email LIKE '%@ubc.ca'), -- Only UBC emails allowed
+    email VARCHAR(255) UNIQUE NOT NULL,
     phone VARCHAR(20) NULL,
     role ENUM('student', 'admin') NOT NULL,
     password VARCHAR(255) NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE students (
     year_level INT NOT NULL,
     program_id INT NOT NULL,
     faculty_id INT NOT NULL,
-    login_email VARCHAR(100) NOT NULL UNIQUE CHECK (login_email LIKE '%@ubc.ca'),
+    login_email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(50) NOT NULL,
     FOREIGN KEY (faculty_id) REFERENCES faculties(faculty_id) ON DELETE CASCADE,
     FOREIGN KEY (program_id) REFERENCES programs(program_id) ON DELETE CASCADE

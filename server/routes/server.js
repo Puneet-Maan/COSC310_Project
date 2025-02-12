@@ -19,7 +19,7 @@ const __dirname = path.dirname(__filename);
 app.use(cors());
 app.use(express.json());
 
-// ✅ Serve Static Files (Fix the Error)
+// ✅ Serve Static Files
 app.use(express.static(path.join(__dirname, "public")));
 
 // **API Route: Get All Courses**
@@ -32,10 +32,24 @@ app.get("/api/courses", async (req, res) => {
         if (courses.length === 0) {
             return res.status(404).json({ message: "No courses available" });
         }
-
         res.json(courses);
     } catch (error) {
         console.error("❌ Error fetching courses:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+// **API Route: Get Specific Course by Course Code**
+app.get("/api/courses/:code", async (req, res) => {
+    const courseCode = req.params.code.toUpperCase();
+    try {
+        const [courses] = await db.query("SELECT * FROM courses WHERE course_code = ?", [courseCode]);
+        if (courses.length === 0) {
+            return res.status(404).json({ message: "Course not found" });
+        }
+        res.json(courses[0]);
+    } catch (error) {
+        console.error("❌ Error fetching course:", error);
         res.status(500).json({ message: "Server error" });
     }
 });
