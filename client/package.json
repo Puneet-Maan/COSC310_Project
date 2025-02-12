@@ -4,10 +4,16 @@
   "proxy": "http://localhost:5000",
   "private": true,
   "dependencies": {
+    "@tailwindcss/cli": "^4.0.3",
+    "axios": "^0.21.1",
     "client": "file:",
     "cra-template": "1.2.0",
+    "lucide-react": "^0.474.0",
+    "postcss-flexbugs-fixes": "^5.0.2",
+    "postcss-preset-env": "^10.1.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "5.0.1",
     "web-vitals": "^4.2.4"
   },
@@ -34,5 +40,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "autoprefixer": "^9.8.8",
+    "postcss": "^8.5.1",
+    "postcss-cli": "^11.0.0",
+    "shadcn-ui": "^0.9.4",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17"
   }
 }

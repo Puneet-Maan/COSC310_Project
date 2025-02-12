@@ -1,29 +1,37 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import LogIn from './logIn';
+import AccRegister from './AccRegister';
 
-function App() {
-
-  const [backendData, setBackendData] = useState([{}]);
-
-  useEffect(() => {
-    fetch('/api')
-      .then(res => res.json())
-      .then(data => setBackendData(data))
-  }, []);
-
+function Home() {
   return (
-    <div>
-      <h1>React App</h1>
-      <h2>Backend Data</h2>
-
-      {(typeof backendData.users === 'undefined') ? (
-        <p>Loading...</p>
-      ): (
-        backendData.users.map((user, index) => (
-          <p key={index}>{user}</p>
-        ))
-      )}
+    <div className="text-center mt-12">
+      <h1 className="text-4xl font-bold mb-8">Welcome to COSC310 Project</h1>
+      <nav>
+        <ul className="list-none p-0">
+          <li className="inline mx-4">
+            <Link to="/login" className="text-blue-500 font-bold hover:text-blue-700">Login</Link>
+          </li>
+          {/* Add more links to other features here */}
+        </ul>
+      </nav>
     </div>
   );
 }
 
-export default App
+function App() {
+  return (
+    <div className="min-h-screen bg-white text-black">
+      <Router>
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/login" component={LogIn} />
+          <Route path="/register" component={AccRegister} />
+          {/* Add more routes to other features here */}
+        </Switch>
+      </Router>
+    </div>
+  );
+}
+
+export default App;
