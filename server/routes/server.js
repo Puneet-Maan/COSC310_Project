@@ -1,29 +1,19 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import path from "path"; // Import path module
-import { fileURLToPath } from "url"; // Fix __dirname for ES Modules
-import db from "./db.js"; // Ensure db.js is updated to use ES modules
+import db from "./db.js"; // MySQL connection
 
 // Load environment variables
 dotenv.config();
 
-const app = express();
-const PORT = process.env.PORT || 5000; // Allow dynamic port assignment
-
-// Fix __dirname in ES Modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const router = express.Router(); // Use Router to define API routes
 
 // Middleware
-app.use(cors());
-app.use(express.json());
-
-// ✅ Serve Static Files
-app.use(express.static(path.join(__dirname, "public")));
+router.use(cors());
+router.use(express.json());
 
 // **API Route: Get All Courses**
-app.get("/api/courses", async (req, res) => {
+router.get("/courses", async (req, res) => {
     try {
         const [courses] = await db.query(
             "SELECT course_code, course_name, department, credits, requires_lab FROM courses"
@@ -40,7 +30,7 @@ app.get("/api/courses", async (req, res) => {
 });
 
 // **API Route: Get Specific Course by Course Code**
-app.get("/api/courses/:code", async (req, res) => {
+router.get("/courses/:code", async (req, res) => {
     const courseCode = req.params.code.toUpperCase();
     try {
         const [courses] = await db.query("SELECT * FROM courses WHERE course_code = ?", [courseCode]);
@@ -54,7 +44,5 @@ app.get("/api/courses/:code", async (req, res) => {
     }
 });
 
-// **Start the Server**
-app.listen(PORT, () => {
-    console.log(`🚀 Server running at http://localhost:${PORT}`);
-});
+// Export the router for use in index.js
+export default router;
