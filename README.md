@@ -62,7 +62,7 @@ docker exec -it nullPointers-db mysql -u root -p
 
 ### How to Run Tests
 
-1. Open terminal in the server folder:
+1. Open terminal in the server folder (Make sure backend is not running or tests will fail):
 
    ```bash
    cd server
