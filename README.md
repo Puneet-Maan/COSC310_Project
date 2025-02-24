@@ -9,8 +9,13 @@
    ```bash
    cd server
    ```
+2. Install dependencies
 
-2. In terminal, run:
+   ```bash
+   npm install
+   ```
+   
+3. In terminal, run:
 
    ```bash
    npm run dev
@@ -24,7 +29,14 @@
    cd client
    ```
 
-2. In terminal, run:
+2. Install dependencies
+
+   
+   ```bash
+   npm install
+   ```
+
+3. In terminal, run:
 
    ```bash
    npm start
@@ -50,7 +62,7 @@ docker exec -it nullPointers-db mysql -u root -p
 
 ### How to Run Tests
 
-1. Open terminal in the server folder:
+1. Open terminal in the server folder (Make sure backend is not running or tests will fail):
 
    ```bash
    cd server
