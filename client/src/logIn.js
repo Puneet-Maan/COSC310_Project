@@ -87,6 +87,11 @@ function LogIn() {
           >
             Logout
           </button>
+          <div className="text-center text-sm text-gray-500">
+            <Link to="/edit-account" className="text-blue-500 hover:underline">
+              Edit Account
+            </Link>
+          </div>
         </div>
       )}
       <button 
