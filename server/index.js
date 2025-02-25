@@ -2,6 +2,7 @@ import express from 'express';
 import pool from './routes/db.js'; // Import MySQL connection
 import authRoutes from './routes/auth.js'; // Import authentication routes
 import registerRoute from './routes/register.js'; // Import registration route
+import editAccRoute from './routes/editAcc.js'; // Import edit account route
 
 const app = express();
 const port = 5000;
@@ -9,6 +10,7 @@ const port = 5000;
 app.use(express.json()); // Middleware to parse JSON request bodies
 app.use('/api', authRoutes); // Use authentication routes under the /api path
 app.use('/api/register', registerRoute); // Use registration route under the /api/register path
+app.use('/api', editAccRoute); // Use edit account route under the /api path
 
 // Test route to check if the server is running
 app.get("/api", (req, res) => {
