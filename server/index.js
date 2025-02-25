@@ -1,31 +1,39 @@
-import express from 'express';
-import pool from './routes/db.js'; // Import MySQL connection
-import authRoutes from './routes/auth.js'; // Import authentication routes
+const express = require('express');
+const pool = require('./routes/db'); // Import MySQL connection
+const path = require('path'); // Import the path module
 
+//const browseCourse = require('./routes/browseCourse'); // Import browseCourse route
 const app = express();
 
-app.use(express.json()); // Middleware to parse JSON request bodies
-app.use('/api', authRoutes); // Use authentication routes under the /api path
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'routes/public')));
 
-// Test route to check if the server is running
-app.get("/api", (req, res) => {
-  res.json({ "users": ["userOne", "userTwo", "userThree"] });
-});
 
-// Test route to check the database connection
-app.get('/api/test-db', async (req, res) => {
+// Test database connection
+app.get('/api/test', async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT NOW()'); // Query the database to get the current time
-    res.json({ message: 'Database connected!', time: rows[0]}); // Respond with the current time
+    const [rows] = await pool.query('SELECT NOW()'); // Ensure pool is used
+    res.json({ message: 'Database connected!', time: rows[0]});
   } catch (err) {
     console.error("Database connection error:", err);
-    res.status(500).json({ message: 'Database connection failed', error: err.message }); // Respond with an error message
+    res.status(500).json({ message: 'Database connection failed', error: err.message });
   }
 });
+app.get("/api/courses", async (req, res) => {
+  try {
+    console.log("✅ Fetching courses from the database...");
+    const [rows] = await pool.query("SELECT * FROM courses");
+    console.log("✅ Courses fetched:", rows);
+    res.json(rows);
+  } catch (error) {
+    console.error("❌ Error fetching courses:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+app.get("/" , (req, res) => { 
+  res.send("Welcome to the Null Pointers API! 🎉");
+});
 
-// Start the server on port 5000
 app.listen(5000, () => {
   console.log("Server is running on port 5000");
 });
-
-export default app;

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Browse Courses</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Title of Page-->
+     <header>
+        <h1>The University of Null Pointers</h1>
+     </header>
+
+     <main>
+        <section class="search-filter">
+            <input type="text" placeholder="Search courses..." id="searchBar">
+            <select id="filterByDepartment">
+                <option value="">All Departments</option>
+                <option value="Faculty of Science">Faculty of Science</option>
+                <option value="Faculty of Engineering">Faculty of Engineering</option>
+                <option value="Faculty of Arts and Social Science">Faculty of Arts</option>
+            </select>
+        </section>
+
+        <section id="course-list">
+            <table class="course-table">
+                <thead>
+                    <tr>
+                        <th>Subject Code</th>
+                        <th>Subject Title</th>
+                        <th>Faculty / School</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Courses will be inserted here by JavaScript -->
+                </tbody>
+            </table>
+        </section>
+
+        <div class="pagination">
+            <button>Previous</button>
+            <span class="pageNumber">Page 1 of 5</span>
+            <button>Next</button>
+        </div>
+     </main>
+
+     <footer>
+        <p>© 2025 The University of Null Pointers</p>
+     </footer>
+
+     <!-- ✅ Add JavaScript here before closing body -->
+    <script src="script.js"></script>
+</body>
+</html>

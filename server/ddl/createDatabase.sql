@@ -1,116 +1,83 @@
--- Create Database (if not exists)
+-- Create the database (optional, depending on your setup)
 CREATE DATABASE IF NOT EXISTS nullPointersDatabase;
 USE nullPointersDatabase;
 
--- Table: Faculties
-CREATE TABLE faculties (
-    faculty_id INT AUTO_INCREMENT PRIMARY KEY,
-    faculty_name VARCHAR(100) UNIQUE NOT NULL
-);
-
--- Table: Programs (linked to Faculties)
-CREATE TABLE programs (
-    program_id INT AUTO_INCREMENT PRIMARY KEY,
-    program_name VARCHAR(100) UNIQUE NOT NULL,
-    faculty_id INT,
-    FOREIGN KEY (faculty_id) REFERENCES faculties(faculty_id) ON DELETE CASCADE
-);
-
--- Table: Accounts (students & admins)
+-- Table: accounts (stores user information for students and admins)
 CREATE TABLE accounts (
-    user_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    phone VARCHAR(20) NULL,
-    role ENUM('student', 'admin') NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    faculty_id INT NULL,
-    program_id INT NULL,
-    FOREIGN KEY (faculty_id) REFERENCES faculties(faculty_id) ON DELETE SET NULL,
-    FOREIGN KEY (program_id) REFERENCES programs(program_id) ON DELETE SET NULL
+    user_id INT AUTO_INCREMENT PRIMARY KEY,  -- Unique ID for each user
+    name VARCHAR(100) NOT NULL,              -- Full name of the user
+    email VARCHAR(255) UNIQUE NOT NULL,      -- Email (used for login/contact)
+    phone VARCHAR(20) NULL,                  -- Contact number (optional)
+    role ENUM('student', 'admin') NOT NULL,  -- Defines if user is a student or admin
+    password VARCHAR(255) NOT NULL           -- Hashed password for security
 );
 
--- Table: Students
-CREATE TABLE students (
-    student_id CHAR(8) NOT NULL UNIQUE PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    year_level INT NOT NULL,
-    program_id INT NOT NULL,
-    faculty_id INT NOT NULL,
-    login_email VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(50) NOT NULL,
-    FOREIGN KEY (faculty_id) REFERENCES faculties(faculty_id) ON DELETE CASCADE,
-    FOREIGN KEY (program_id) REFERENCES programs(program_id) ON DELETE CASCADE
-);
-
--- Table: Courses
+-- Table: courses (stores general course details)
 CREATE TABLE courses (
-    course_id INT AUTO_INCREMENT PRIMARY KEY,
-    course_code VARCHAR(20) UNIQUE NOT NULL,
-    course_name VARCHAR(100) NOT NULL,
-    department VARCHAR(50) NOT NULL,
-    credits INT NOT NULL,
-    requires_lab BOOLEAN DEFAULT FALSE,
-    program_id INT,
-    FOREIGN KEY (program_id) REFERENCES programs(program_id) ON DELETE SET NULL
+    course_id INT AUTO_INCREMENT PRIMARY KEY, -- Unique ID for each course
+    course_code VARCHAR(20) UNIQUE NOT NULL,  -- Short course identifier (e.g., "CS101")
+    course_name VARCHAR(100) NOT NULL,        -- Full name of the course (e.g., "Introduction to Programming")
+    department VARCHAR(50) NOT NULL,          -- Department offering the course (e.g., "Computer Science")
+    credits INT NOT NULL,                     -- Number of credit hours
+    requires_lab BOOLEAN DEFAULT FALSE        -- Indicates if the course requires a lab
 );
 
--- Table: Sections (each course has multiple sections)
+-- Table: sections (stores different class sections of a course)
 CREATE TABLE sections (
-    section_id INT AUTO_INCREMENT PRIMARY KEY,
-    course_id INT NOT NULL,
-    section_number VARCHAR(10) NOT NULL,
-    instructor VARCHAR(100) NOT NULL,
-    schedule VARCHAR(255) NOT NULL,
-    room VARCHAR(50) NULL,
+    section_id INT AUTO_INCREMENT PRIMARY KEY,   -- Unique section identifier
+    course_id INT NOT NULL,                      -- References the course it belongs to
+    section_number VARCHAR(10) NOT NULL,         -- Section number (e.g., "A01", "B02")
+    instructor VARCHAR(100) NOT NULL,            -- Instructor's name
+    schedule VARCHAR(255) NOT NULL,              -- Class schedule (e.g., "Mon/Wed 10-11 AM")
+    room VARCHAR(50) NULL,                       -- Classroom location
     FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE CASCADE
 );
 
--- Table: Planned Schedules (students plan courses before actual enrollment)
+-- Table: planned_schedules (stores students' planned courses before enrollment)
 CREATE TABLE planned_schedules (
-    plan_id INT AUTO_INCREMENT PRIMARY KEY,
-    student_id CHAR(8) NOT NULL,
-    section_id INT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE,
+    plan_id INT AUTO_INCREMENT PRIMARY KEY,  -- Unique schedule plan ID
+    student_id INT NOT NULL,                 -- References the student creating the plan
+    section_id INT NOT NULL,                 -- Course section added to the plan
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Timestamp for when the plan was made
+    FOREIGN KEY (student_id) REFERENCES accounts(user_id) ON DELETE CASCADE,
     FOREIGN KEY (section_id) REFERENCES sections(section_id) ON DELETE CASCADE
 );
 
--- Table: Enrollments (tracks students’ registered courses & grades)
+-- Table: enrollments (tracks students' courses and grades)
 CREATE TABLE enrollments (
-    enrollment_id INT AUTO_INCREMENT PRIMARY KEY,
-    student_id CHAR(8) NOT NULL,
-    section_id INT NOT NULL,
-    grade VARCHAR(5) NULL,
-    FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE,
+    enrollment_id INT AUTO_INCREMENT PRIMARY KEY,  -- Unique record ID
+    student_id INT NOT NULL,                       -- References the student (from accounts)
+    section_id INT NOT NULL,                       -- References the course section
+    grade VARCHAR(5) NULL,                         -- Final grade (e.g., "A", "B+", "C")
+    FOREIGN KEY (student_id) REFERENCES accounts(user_id) ON DELETE CASCADE,
     FOREIGN KEY (section_id) REFERENCES sections(section_id) ON DELETE CASCADE
 );
 
--- Table: Prerequisites (stores course prerequisite relationships)
+-- Table: prerequisites (stores course prerequisite relationships)
 CREATE TABLE prerequisites (
-    course_id INT NOT NULL,
-    prereq_course_id INT NOT NULL,
+    course_id INT NOT NULL,       -- The course that requires a prerequisite
+    prereq_course_id INT NOT NULL,-- The required prerequisite course
     PRIMARY KEY (course_id, prereq_course_id),
     FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE CASCADE,
     FOREIGN KEY (prereq_course_id) REFERENCES courses(course_id) ON DELETE CASCADE
 );
 
--- Table: Course Lab Sections (for courses that require labs)
+-- Table: course_lab_sections (stores lab sections for courses that require labs)
 CREATE TABLE course_lab_sections (
-    lab_id INT AUTO_INCREMENT PRIMARY KEY,
-    section_id INT NOT NULL,
-    lab_schedule VARCHAR(255) NOT NULL,
-    lab_room VARCHAR(50) NULL,
+    lab_id INT AUTO_INCREMENT PRIMARY KEY,  -- Unique lab section identifier
+    section_id INT NOT NULL,                -- References the course section
+    lab_schedule VARCHAR(255) NOT NULL,     -- Lab schedule (e.g., "Thu 2-4 PM")
+    lab_room VARCHAR(50) NULL,              -- Lab location
     FOREIGN KEY (section_id) REFERENCES sections(section_id) ON DELETE CASCADE
 );
 
--- Table: Waitlist (students waiting for full courses)
+-- Table: waitlist (stores students waiting for full courses)
 CREATE TABLE waitlist (
-    waitlist_id INT AUTO_INCREMENT PRIMARY KEY,
-    student_id CHAR(8) NOT NULL,
-    section_id INT NOT NULL,
-    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE,
+    waitlist_id INT AUTO_INCREMENT PRIMARY KEY, -- Unique waitlist entry ID
+    student_id INT NOT NULL,                    -- References the student who is waiting
+    section_id INT NOT NULL,                    -- References the course section the student wants to join
+    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Timestamp for when the student was added to the waitlist
+    FOREIGN KEY (student_id) REFERENCES accounts(user_id) ON DELETE CASCADE,
     FOREIGN KEY (section_id) REFERENCES sections(section_id) ON DELETE CASCADE,
-    UNIQUE (student_id, section_id) -- Prevent duplicate waitlist entries
+    UNIQUE (student_id, section_id)             -- Ensure a student can't be on the waitlist for the same course twice
 );
