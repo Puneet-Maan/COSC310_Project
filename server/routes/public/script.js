@@ -2,9 +2,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const API_URL = "http://localhost:5000/api/courses"; // Backend API
     const courseTableBody = document.querySelector(".course-table tbody");
     const searchBar = document.getElementById("searchBar");
+    const clearSearchButton = document.getElementById("clearSearch");
     const filterByDepartment = document.getElementById("filterByDepartment");
-    const prevButton = document.querySelector(".pagination button:first-child");
-    const nextButton = document.querySelector(".pagination button:last-child");
+    const sortBy = document.getElementById("sortBy");
+    const prevButton = document.getElementById("prevPage");
+    const nextButton = document.getElementById("nextPage");
+    const firstButton = document.getElementById("firstPage");
+    const lastButton = document.getElementById("lastPage");
+    const pageNumberSpan = document.getElementById("pageNumber");
 
     let courses = [];
     let filteredCourses = [];
@@ -35,18 +40,22 @@ document.addEventListener("DOMContentLoaded", () => {
         paginatedCourses.forEach(course => {
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td><a href="#" class="course-link" data-code="${course.course_code}">${course.course_code}</a></td>
+                <td>${course.course_code}</td>
                 <td>${course.course_name}</td>
                 <td>${course.department}</td>
             `;
             courseTableBody.appendChild(row);
         });
 
+        // Update page number
+        const totalPages = Math.ceil(filteredCourses.length / itemsPerPage);
+        pageNumberSpan.textContent = `Page ${currentPage} of ${totalPages}`;
+
         // Enable/Disable pagination buttons
         prevButton.disabled = currentPage === 1;
-        nextButton.disabled = end >= filteredCourses.length;
-
-        attachCourseDetailsEvent(); // Attach click events for details
+        nextButton.disabled = currentPage === totalPages;
+        firstButton.disabled = currentPage === 1;
+        lastButton.disabled = currentPage === totalPages;
     }
 
     // Search and filter courses
@@ -60,38 +69,30 @@ document.addEventListener("DOMContentLoaded", () => {
             (selectedDepartment === "" || course.department === selectedDepartment)
         );
 
+        sortCourses();
         currentPage = 1; // Reset to first page after filtering
         renderCourses();
     }
 
-    // Display course details on click
-    function attachCourseDetailsEvent() {
-        document.querySelectorAll(".course-link").forEach(link => {
-            link.addEventListener("click", async (event) => {
-                event.preventDefault();
-                const courseCode = event.target.dataset.code;
-                showCourseDetails(courseCode);
+    // Sort courses
+    function sortCourses() {
+        const sortOption = sortBy.value;
+        if (sortOption === "alphabet") {
+            filteredCourses.sort((a, b) => a.course_name.localeCompare(b.course_name));
+        } else if (sortOption === "year") {
+            filteredCourses.sort((a, b) => {
+                const yearA = parseInt(a.course_code.match(/\d+/)[0][0]);
+                const yearB = parseInt(b.course_code.match(/\d+/)[0][0]);
+                return yearA - yearB;
             });
-        });
-    }
-
-    async function showCourseDetails(courseCode) {
-        try {
-            const response = await fetch(`${API_URL}/${courseCode}`);
-            if (!response.ok) throw new Error("Course not found");
-            const course = await response.json();
-            
-            alert(`📘 Course Details:
-            \n📌 Code: ${course.course_code}
-            \n📖 Name: ${course.course_name}
-            \n🏫 Department: ${course.department}
-            \n📚 Credits: ${course.credits}
-            \n🧪 Requires Lab: ${course.requires_lab ? "Yes" : "No"}`);
-        } catch (error) {
-            console.error("Error fetching course details:", error);
-            alert("⚠ Course details could not be retrieved.");
         }
     }
+
+    // Clear search
+    clearSearchButton.addEventListener("click", () => {
+        searchBar.value = "";
+        filterCourses();
+    });
 
     // Pagination controls
     prevButton.addEventListener("click", () => {
@@ -102,21 +103,30 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     nextButton.addEventListener("click", () => {
-        if (currentPage * itemsPerPage < filteredCourses.length) {
+        const totalPages = Math.ceil(filteredCourses.length / itemsPerPage);
+        if (currentPage < totalPages) {
             currentPage++;
             renderCourses();
         }
     });
 
-    displayPageNumber = () => {
-        document.getElementsByClassName("pageNumber").innerText = currentPage;
-        
-    }
+    firstButton.addEventListener("click", () => {
+        currentPage = 1;
+        renderCourses();
+    });
 
-    // Attach event listeners for search and filtering
+    lastButton.addEventListener("click", () => {
+        const totalPages = Math.ceil(filteredCourses.length / itemsPerPage);
+        currentPage = totalPages;
+        renderCourses();
+    });
+
     searchBar.addEventListener("input", filterCourses);
     filterByDepartment.addEventListener("change", filterCourses);
+    sortBy.addEventListener("change", () => {
+        sortCourses();
+        renderCourses();
+    });
 
-    // Fetch courses on page load
-    fetchCourses();
+    fetchCourses(); // Initial fetch
 });
