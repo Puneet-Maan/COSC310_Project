@@ -92,7 +92,7 @@ async function deleteCourse(courseId) {
     }
 }
 
-// 🟢 Function to Fetch and Display Students from Backend
+//  Function to Fetch and Display Students from Backend
 async function fetchStudents() {
     try {
         const response = await fetch("http://localhost:5000/admin/students");
@@ -112,7 +112,7 @@ async function fetchStudents() {
     }
 }
 
-// 🟢 Function to Add a New Student (Saves to Database)
+// Function to Add a New Student (Saves to Database)
 async function addStudent() {
     let name = document.getElementById("studentName").value;
     let id = document.getElementById("studentID").value;
@@ -153,7 +153,7 @@ async function addStudent() {
     document.getElementById("studentEmail").value = "";
 }
 
-// 🟢 Function to Delete a Student from Database
+// Function to Delete a Student from Database
 async function deleteStudent(studentId) {
     try {
         const response = await fetch(`http://localhost:5000/admin/delete-student/${studentId}`, {
