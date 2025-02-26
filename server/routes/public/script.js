@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const API_URL = "http://localhost:5000/api/courses"; // Backend API
+    const API_URL = "http://localhost:5000/api/courses"; // references APIR URL (fetch course data from backend)
     const courseTableBody = document.querySelector(".course-table tbody");
     const searchBar = document.getElementById("searchBar");
     const clearSearchButton = document.getElementById("clearSearch");
@@ -11,19 +11,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const lastButton = document.getElementById("lastPage");
     const pageNumberSpan = document.getElementById("pageNumber");
 
-    let courses = [];
-    let filteredCourses = [];
-    let currentPage = 1;
-    const itemsPerPage = 10;
+    let courses = []; //store courses fetched from backend
+    let filteredCourses = []; //store courses after filtering
+    let currentPage = 1; //track current page
+    const itemsPerPage = 10; //number of courses per page
 
     // Fetch courses from backend
     async function fetchCourses() {
         try {
-            const response = await fetch(API_URL);
+            const response = await fetch(API_URL); //to retrieve courses from backend 
             if (!response.ok) throw new Error("Failed to fetch courses");
-            courses = await response.json();
+            courses = await response.json(); //parse the response into a javascript object
             filteredCourses = [...courses]; // Copy courses for filtering
-            renderCourses();
+            renderCourses(); //to display courses on the page
         } catch (error) {
             console.error("Error fetching courses:", error);
             courseTableBody.innerHTML = "<tr><td colspan='3'>Failed to load courses.</td></tr>";
@@ -32,13 +32,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Render paginated courses
     function renderCourses() {
-        courseTableBody.innerHTML = "";
-        const start = (currentPage - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
-        const paginatedCourses = filteredCourses.slice(start, end);
+        courseTableBody.innerHTML = ""; //clear previous course list 
+        const start = (currentPage - 1) * itemsPerPage; //calculate start index
+        const end = start + itemsPerPage; //calculate end index
+        const paginatedCourses = filteredCourses.slice(start, end); //extract 10 courses from filteredCourses
 
+        //loop through paginated courses and display them in the table
         paginatedCourses.forEach(course => {
-            const row = document.createElement("tr");
+            const row = document.createElement("tr"); //create a <tr> table row
             row.innerHTML = `
                 <td>
                     <a href="course-details.html?code=${course.course_code}" class="course-link">
@@ -48,15 +49,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td>${course.course_name}</td>
                 <td>${course.department}</td>
             `;
-            courseTableBody.appendChild(row);
+            courseTableBody.appendChild(row); //append the row to the table body
         });
 
         // Update page number
-        const totalPages = Math.ceil(filteredCourses.length / itemsPerPage);
-        pageNumberSpan.textContent = `Page ${currentPage} of ${totalPages}`;
+        const totalPages = Math.ceil(filteredCourses.length / itemsPerPage); //calculate total number of pages
+        pageNumberSpan.textContent = `Page ${currentPage} of ${totalPages}`; //display current page number
 
         // Enable/Disable pagination buttons
-        prevButton.disabled = currentPage === 1;
+        prevButton.disabled = currentPage === 1; 
         nextButton.disabled = currentPage === totalPages;
         firstButton.disabled = currentPage === 1;
         lastButton.disabled = currentPage === totalPages;
@@ -64,8 +65,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Search and filter courses
     function filterCourses() {
-        const searchText = searchBar.value.toLowerCase();
-        const selectedDepartment = filterByDepartment.value;
+        const searchText = searchBar.value.toLowerCase(); 
+        const selectedDepartment = filterByDepartment.value;  //get selected department from dropdown
 
         filteredCourses = courses.filter(course => 
             (course.course_name.toLowerCase().includes(searchText) || 
@@ -73,9 +74,9 @@ document.addEventListener("DOMContentLoaded", () => {
             (selectedDepartment === "" || course.department === selectedDepartment)
         );
 
-        sortCourses();
+        sortCourses(); // ensures sorted results are displayed
         currentPage = 1; // Reset to first page after filtering
-        renderCourses();
+        renderCourses(); //update the displayed courses
     }
 
     // Sort courses
@@ -92,13 +93,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Clear search
+    // Clear search and reset filters
     clearSearchButton.addEventListener("click", () => {
         searchBar.value = "";
         filterCourses();
     });
 
-    // Pagination controls
+    // Previous page
     prevButton.addEventListener("click", () => {
         if (currentPage > 1) {
             currentPage--;
@@ -106,6 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    
     nextButton.addEventListener("click", () => {
         const totalPages = Math.ceil(filteredCourses.length / itemsPerPage);
         if (currentPage < totalPages) {
@@ -125,6 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
         renderCourses();
     });
 
+    
     searchBar.addEventListener("input", filterCourses);
     filterByDepartment.addEventListener("change", filterCourses);
     sortBy.addEventListener("change", () => {
