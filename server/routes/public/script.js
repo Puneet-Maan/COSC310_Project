@@ -40,7 +40,11 @@ document.addEventListener("DOMContentLoaded", () => {
         paginatedCourses.forEach(course => {
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td>${course.course_code}</td>
+                <td>
+                    <a href="course-details.html?code=${course.course_code}" class="course-link">
+                    ${course.course_code}
+                    </a>
+                </td>
                 <td>${course.course_name}</td>
                 <td>${course.department}</td>
             `;
