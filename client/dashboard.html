@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal </title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1> Admin Dashboard</h1>
+        
+        <!-- Course Management -->
+        <section>
+            <h2>Course Management</h2>
+            <input type="text" id="courseName" placeholder="Course Name">
+            <textarea id="courseDescription" placeholder="Course Description"></textarea>
+            <button onclick="addCourse()">Add Course</button>
+            <ul id="courseList"></ul>
+        </section>
+
+        <!-- Student Management -->
+        <section>
+            <h2>Student Management</h2>
+            <input type="text" id="studentName" placeholder="Student Name">
+            <input type="text" id="studentID" placeholder="Student ID">
+            <input type="email" id="studentEmail" placeholder="Student Email">
+            <input type="text" id="studentCourses" placeholder="Enrolled Courses">
+            <input type="text" id="studentGrades" placeholder="Grades">
+            <button onclick="addStudent()">Add Student</button>
+            <ul id="studentList"></ul>
+        </section>
+    </div>
+</body>
+<script defer src="script.js"></script>
+</html>
+
+
+
+
+
+
