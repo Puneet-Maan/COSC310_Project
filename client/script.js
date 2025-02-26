@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-<<<<<<< HEAD
     fetchCourses();
     fetchStudents();
 
@@ -37,17 +36,6 @@ async function fetchCourses() {
 
 // 🟢 Function to Add a New Course (Saves to Database)
 async function addCourse() {
-=======
-    displayCourses();
-    displayStudents();
-});
-
-let coursesData = [];
-let studentsData = [];
-
-// Function to add a new course and display it
-function addCourse() {
->>>>>>> 247cfec (Added frontend admin files used to add new courses and add new student information)
     let name = document.getElementById("courseName").value;
     let desc = document.getElementById("courseDescription").value;
 
@@ -56,7 +44,6 @@ function addCourse() {
         return;
     }
 
-<<<<<<< HEAD
     try {
         const response = await fetch("http://localhost:5000/admin/add-course", {
             method: "POST",
@@ -80,17 +67,11 @@ function addCourse() {
         console.error("Error:", error);
         alert("Failed to add course.");
     }
-=======
-    let newCourse = { name, description: desc };
-    coursesData.push(newCourse);
-    displayCourses();
->>>>>>> 247cfec (Added frontend admin files used to add new courses and add new student information)
 
     document.getElementById("courseName").value = "";
     document.getElementById("courseDescription").value = "";
 }
 
-<<<<<<< HEAD
 // 🟢 Function to Delete a Course from Database
 async function deleteCourse(courseId) {
     try {
@@ -166,48 +147,10 @@ async function addStudent() {
         console.error("Error:", error);
         alert("Failed to add student.");
     }
-=======
-// Function to display courses
-function displayCourses() {
-    const list = document.getElementById("courseList");
-    list.innerHTML = "";
-
-    coursesData.forEach((course, index) => {
-        let li = document.createElement("li");
-        li.innerHTML = `${course.name} - ${course.description} 
-            <button class='delete-btn' onclick='deleteCourse(${index})'>Delete</button>`;
-        list.appendChild(li);
-    });
-}
-
-// Function to delete a course
-function deleteCourse(index) {
-    coursesData.splice(index, 1);
-    displayCourses();
-}
-
-// Function to add a new student and display it
-function addStudent() {
-    let name = document.getElementById("studentName").value;
-    let id = document.getElementById("studentID").value;
-    let email = document.getElementById("studentEmail").value;
-    let courses = document.getElementById("studentCourses").value;
-    let grades = document.getElementById("studentGrades").value;
-
-    if (!name || !id || !email || !courses || !grades) {
-        alert("Please fill in all fields!");
-        return;
-    }
-
-    let newStudent = { name, id, email, courses, grades };
-    studentsData.push(newStudent);
-    displayStudents();
->>>>>>> 247cfec (Added frontend admin files used to add new courses and add new student information)
 
     document.getElementById("studentName").value = "";
     document.getElementById("studentID").value = "";
     document.getElementById("studentEmail").value = "";
-<<<<<<< HEAD
 }
 
 // 🟢 Function to Delete a Student from Database
@@ -228,27 +171,4 @@ async function deleteStudent(studentId) {
         console.error("Error:", error);
         alert("Failed to delete student.");
     }
-=======
-    document.getElementById("studentCourses").value = "";
-    document.getElementById("studentGrades").value = "";
-}
-
-// Function to display students
-function displayStudents() {
-    const list = document.getElementById("studentList");
-    list.innerHTML = "";
-
-    studentsData.forEach((student, index) => {
-        let li = document.createElement("li");
-        li.innerHTML = `${student.name} (ID: ${student.id}) - ${student.email} - Courses: ${student.courses} - Grades: ${student.grades} 
-            <button class='delete-btn' onclick='deleteStudent(${index})'>Delete</button>`;
-        list.appendChild(li);
-    });
-}
-
-// Function to delete a student
-function deleteStudent(index) {
-    studentsData.splice(index, 1);
-    displayStudents();
->>>>>>> 247cfec (Added frontend admin files used to add new courses and add new student information)
 }
