@@ -1,49 +1,52 @@
-const express = require('express');
-const db = require('./db');
-
-// Initialize the router
+const express = require("express");
 const router = express.Router();
+const db = require("../db"); // Import your MySQL connection
 
-// Create a new course
-router.post('/create-course', async (req, res) => {
+// Add a Course
+router.post("/create-course", (req, res) => {
   const { name, description, instructor } = req.body;
   if (!name || !description || !instructor) {
-    return res.status(400).json({ message: 'All fields are required' });
+    return res.status(400).json({ message: "All fields are required." });
   }
 
-  try {
-    const result = await db.query(
-      'INSERT INTO courses (name, description, instructor) VALUES (?, ?, ?)', 
-      [name, description, instructor]
-    );
-    res.status(201).json({ message: 'Course created successfully', courseId: result.insertId });
-  } catch (error) {
-    console.error('Error creating course:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});
-
-// Update user grade
-router.put('/update-grade', async (req, res) => {
-  const { userId, grade } = req.body;
-  if (!userId || !grade) {
-    return res.status(400).json({ message: 'User ID and grade are required' });
-  }
-
-  try {
-    const result = await db.query(
-      'UPDATE users SET grade = ? WHERE id = ?',
-      [grade, userId]
-    );
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ message: 'User not found' });
+  const query = "INSERT INTO courses (name, description, instructor) VALUES (?, ?, ?)";
+  db.query(query, [name, description, instructor], (err, result) => {
+    if (err) {
+      console.error("Error creating course:", err);
+      return res.status(500).json({ message: "Failed to create course." });
     }
-    res.status(200).json({ message: 'Grade updated successfully' });
-  } catch (error) {
-    console.error('Error updating grade:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
+    res.status(201).json({ message: "Course created successfully", courseId: result.insertId });
+  });
 });
 
-// Export the router
+// Update Student Grade
+router.put("/update-grade/:userId", (req, res) => {
+  const { userId } = req.params;
+  const { grade } = req.body;
+  if (!grade) {
+    return res.status(400).json({ message: "Grade is required." });
+  }
+
+  const query = "UPDATE users SET grade = ? WHERE id = ?";
+  db.query(query, [grade, userId], (err, result) => {
+    if (err) {
+      console.error("Error updating grade:", err);
+      return res.status(500).json({ message: "Failed to update grade." });
+    }
+    res.status(200).json({ message: "Grade updated successfully" });
+  });
+});
+
+// Get All Courses
+router.get("/courses", (req, res) => {
+  const query = "SELECT * FROM courses";
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Error fetching courses:", err);
+      return res.status(500).json({ message: "Failed to fetch courses." });
+    }
+    res.status(200).json(results);
+  });
+});
+
 module.exports = router;
