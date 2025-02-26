@@ -12,7 +12,7 @@ router.post("/create-course", (req, res) => {
   const query = "INSERT INTO courses (name, description, instructor) VALUES (?, ?, ?)";
   db.query(query, [name, description, instructor], (err, result) => {
     if (err) {
-      console.error("Error creating course:", err);
+      console.erro6r("Error creating course:", err);
       return res.status(500).json({ message: "Failed to create course." });
     }
     res.status(201).json({ message: "Course created successfully", courseId: result.insertId });
