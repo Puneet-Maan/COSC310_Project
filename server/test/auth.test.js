@@ -1,7 +1,7 @@
-import * as chai from "chai";
-import {default as chaiHttp, request} from "chai-http";
+import chai from "chai";
+import chaiHttp from "chai-http";
 chai.use(chaiHttp);
-var expect = chai.expect;
+const { expect, request } = chai;
 
 import app from '../index.js'; // Your Express app entry file
 import pool from '../routes/db.js'; // Import the MySQL connection
@@ -19,13 +19,13 @@ describe('Auth API', () => {
   });
 
   it('should login successfully with valid credentials', (done) => {
-    request.execute(app)
+    request(app)
       .post('/api/login')
       .send({ email: 'test.student@example.com', password: 'testpassword123' })
       .end((err, res) => {
+        if (err) done(err);
         console.log('----------------------------');
         console.log(res.body);
-        // let t1 = JSON.parse(res.body);
         console.log(res.body.userName);
         console.log('----------------------------');
         expect(res).to.have.status(200);
@@ -35,6 +35,4 @@ describe('Auth API', () => {
         done();
       });
   });
-
-
 });
