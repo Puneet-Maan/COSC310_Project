@@ -8,7 +8,7 @@ router.post('/login', async (req, res) => {
   const { email, password } = req.body; // Extract email and password from the request body
   try {
     // Query the database to check if the email and password are valid
-    const [rows] = await pool.query('SELECT * FROM accounts WHERE email = ? AND password = ?', [email, password]);
+    const [rows] = await pool.query('SELECT * FROM students WHERE login_email = ? AND password = ?', [email, password]);
     if (rows.length > 0) {
       const user = rows[0]; // Get the user details
       res.json({ success: true, userName: user.name }); // Respond with success and the user's name
