@@ -22,12 +22,16 @@ async function fetchCourses() {
         const courses = await response.json();
 
         const list = document.getElementById("courseList");
+        if (!list) {
+            console.error("Course list element not found");
+            return;
+        }
         list.innerHTML = "";
 
         courses.forEach((course) => {
             let li = document.createElement("li");
-            li.innerHTML = `${course.name} - ${course.description} 
-                <button class='delete-btn' onclick='deleteCourse(${course.id})'>Delete</button>`;
+            li.innerHTML = `${course.course_name} - ${course.course_code} 
+                <button class='delete-btn' onclick='deleteCourse(${course.course_id})'>Delete</button>`;
             list.appendChild(li);
         });
     } catch (error) {
@@ -39,11 +43,14 @@ async function fetchCourses() {
 async function addCourse() {
     console.log("Add Course button clicked"); // Log message
 
+    let code = document.getElementById("courseCode").value;
     let name = document.getElementById("courseName").value;
-    let desc = document.getElementById("courseDescription").value;
+    let department = document.getElementById("department").value;
+    let credits = document.getElementById("credits").value;
+    let requiresLab = document.getElementById("requiresLab").checked;
 
-    if (!name || !desc) {
-        alert("Please fill in both fields!");
+    if (!code || !name || !department || !credits) {
+        alert("Please fill in all required fields!");
         return;
     }
 
@@ -54,14 +61,16 @@ async function addCourse() {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                name: name,
-                description: desc,
+                course_code: code,
+                course_name: name,
+                department: department,
+                credits: credits,
+                requires_lab: requiresLab,
             }),
         });
 
         if (response.ok) {
             alert("Course added successfully!");
-            //console.log(`Course added: ${name} - ${desc}`); // Log message
             fetchCourses(); // Refresh the course list
         } else {
             const data = await response.json();
@@ -72,8 +81,11 @@ async function addCourse() {
         alert("Failed to add course.");
     }
 
+    document.getElementById("courseCode").value = "";
     document.getElementById("courseName").value = "";
-    document.getElementById("courseDescription").value = "";
+    document.getElementById("department").value = "";
+    document.getElementById("credits").value = "";
+    document.getElementById("requiresLab").checked = false;
 }
 
 // 🟢 Function to Delete a Course from Database
@@ -103,6 +115,10 @@ async function fetchStudents() {
         const students = await response.json();
 
         const list = document.getElementById("studentList");
+        if (!list) {
+            console.error("Student list element not found");
+            return;
+        }
         list.innerHTML = "";
 
         students.forEach((student) => {

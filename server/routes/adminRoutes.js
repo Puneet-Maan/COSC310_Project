@@ -4,19 +4,22 @@ import db from "./db.js"; // Corrected import path for db.js
 const router = express.Router();
 
 // Add a Course
-router.post("/create-course", async (req, res) => {
-  const { name, description, instructor } = req.body;
-  if (!name || !description || !instructor) {
+router.post("/add-course", async (req, res) => {
+  const { course_code, course_name, department, credits, requires_lab } = req.body;
+  console.log("Received data:", req.body);
+
+  if (!course_code || !course_name || !department || !credits) {
+    console.log("Missing fields:", { course_code, course_name, department, credits });
     return res.status(400).json({ message: "All fields are required." });
   }
 
-  const query = "INSERT INTO courses (name, description, instructor) VALUES (?, ?, ?)";
+  const query = "INSERT INTO courses (course_code, course_name, department, credits, requires_lab) VALUES (?, ?, ?, ?, ?)";
   try {
-    const [result] = await db.query(query, [name, description, instructor]);
+    const [result] = await db.query(query, [course_code, course_name, department, credits, requires_lab]);
     res.status(201).json({ message: "Course created successfully", courseId: result.insertId });
   } catch (err) {
     console.error("Error creating course:", err);
-    res.status(500).json({ message: "Failed to create course." });
+    res.status(500).json({ message: "Failed to create course.", error: err.message });
   }
 });
 
@@ -34,7 +37,7 @@ router.put("/update-grade/:userId", async (req, res) => {
     res.status(200).json({ message: "Grade updated successfully" });
   } catch (err) {
     console.error("Error updating grade:", err);
-    res.status(500).json({ message: "Failed to update grade." });
+    res.status(500).json({ message: "Failed to update grade.", error: err.message });
   }
 });
 
@@ -46,7 +49,7 @@ router.get("/courses", async (req, res) => {
     res.status(200).json(results);
   } catch (err) {
     console.error("Error fetching courses:", err);
-    res.status(500).json({ message: "Failed to fetch courses." });
+    res.status(500).json({ message: "Failed to fetch courses.", error: err.message });
   }
 });
 

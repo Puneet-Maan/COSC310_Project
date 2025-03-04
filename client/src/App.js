@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import logIn from './logIn.js';
 import AccRegister from './AccRegister.js';
 import EditAccount from './EditAccount.js';
+import AdminDashboard from './AdminDashboard.js';
 
 function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('userName'));
@@ -25,7 +26,7 @@ function Home() {
             </li>
           )}
           <li className="inline mx-4">
-            <a href="../dashboard.html" className="text-blue-500 font-bold hover:text-blue-700">Dashboard</a>
+            <Link to="/admin-dashboard" className="text-blue-500 font-bold hover:text-blue-700">Dashboard</Link>
           </li>
           {/* Add more links to other features here */}
         </ul>
@@ -43,6 +44,7 @@ function App() {
           <Route path="/login" component={logIn} />
           <Route path="/register" component={AccRegister} />
           <Route path="/edit-account" component={EditAccount} />
+          <Route path="/admin-dashboard" component={AdminDashboard} />
           {/* Add more routes to other features here */}
         </Switch>
       </Router>
