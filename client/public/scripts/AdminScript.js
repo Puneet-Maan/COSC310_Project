@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (addCourseBtn) {
         addCourseBtn.addEventListener("click", addCourse);
+        console.log("addCourseBtn clicked");
     }
 
     if (addStudentBtn) {
@@ -36,6 +37,8 @@ async function fetchCourses() {
 
 // 🟢 Function to Add a New Course (Saves to Database)
 async function addCourse() {
+    console.log("Add Course button clicked"); // Log message
+
     let name = document.getElementById("courseName").value;
     let desc = document.getElementById("courseDescription").value;
 
@@ -58,6 +61,7 @@ async function addCourse() {
 
         if (response.ok) {
             alert("Course added successfully!");
+            //console.log(`Course added: ${name} - ${desc}`); // Log message
             fetchCourses(); // Refresh the course list
         } else {
             const data = await response.json();

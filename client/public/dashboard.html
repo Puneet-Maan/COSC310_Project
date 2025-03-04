@@ -3,12 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
-    <title>Admin Portal </title>
-=======
     <title>Admin Portal - EduTrack</title>
->>>>>>> 247cfec (Added frontend admin files used to add new courses and add new student information)
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="/scripts/AdminScript.js" defer></script>
 </head>
 <body>
     <div class="container">
@@ -19,7 +16,7 @@
             <h2>Course Management</h2>
             <input type="text" id="courseName" placeholder="Course Name">
             <textarea id="courseDescription" placeholder="Course Description"></textarea>
-            <button onclick="addCourse()">Add Course</button>
+            <button id="addCourseBtn">Add Course</button> <!-- Updated button ID -->
             <ul id="courseList"></ul>
         </section>
 
@@ -31,12 +28,11 @@
             <input type="email" id="studentEmail" placeholder="Student Email">
             <input type="text" id="studentCourses" placeholder="Enrolled Courses">
             <input type="text" id="studentGrades" placeholder="Grades">
-            <button onclick="addStudent()">Add Student</button>
+            <button id="addStudentBtn">Add Student</button> <!-- Updated button ID -->
             <ul id="studentList"></ul>
         </section>
     </div>
 </body>
-<script defer src="script.js"></script>
 </html>
 
 
