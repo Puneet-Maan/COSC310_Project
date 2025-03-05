@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
-import LogIn from './logIn';
-import AccRegister from './AccRegister';
-import EditAccount from './EditAccount'; // Import EditAccount component
+import logIn from './logIn.js';
+import AccRegister from './AccRegister.js';
+import EditAccount from './EditAccount.js';
+import AdminDashboard from './AdminDashboard.js';
 
 function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('userName'));
@@ -24,6 +25,9 @@ function Home() {
               <Link to="/edit-account" className="text-blue-500 font-bold hover:text-blue-700">Edit Account</Link>
             </li>
           )}
+          <li className="inline mx-4">
+            <Link to="/admin-dashboard" className="text-blue-500 font-bold hover:text-blue-700">Dashboard</Link>
+          </li>
           {/* Add more links to other features here */}
         </ul>
       </nav>
@@ -37,9 +41,10 @@ function App() {
       <Router>
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route path="/login" component={LogIn} />
+          <Route path="/login" component={logIn} />
           <Route path="/register" component={AccRegister} />
-          <Route path="/edit-account" component={EditAccount} /> {/* Add new route for Edit Account */}
+          <Route path="/edit-account" component={EditAccount} />
+          <Route path="/admin-dashboard" component={AdminDashboard} />
           {/* Add more routes to other features here */}
         </Switch>
       </Router>
