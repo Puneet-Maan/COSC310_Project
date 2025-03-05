@@ -1,16 +1,22 @@
 import express from 'express';
+import cors from 'cors'; // Import CORS middleware
 import pool from './routes/db.js'; // Import MySQL connection
 import authRoutes from './routes/auth.js'; // Import authentication routes
 import registerRoute from './routes/register.js'; // Import registration route
 import editAccRoute from './routes/editAcc.js'; // Import edit account route
+import waitlistRoute from './routes/waitlist.js'; // Import waitlist route
+
 
 const app = express();
-const port = 5000;
+const port = 5001;
 
+app.use(cors()); // Add CORS middleware
 app.use(express.json()); // Middleware to parse JSON request bodies
 app.use('/api', authRoutes); // Use authentication routes under the /api path
 app.use('/api/register', registerRoute); // Use registration route under the /api/register path
 app.use('/api', editAccRoute); // Use edit account route under the /api path
+app.use('/api', waitlistRoute); // Use waitlist route under the /api path
+
 
 // Test route to check if the server is running
 app.get("/api", (req, res) => {
@@ -28,9 +34,9 @@ app.get('/api/test-db', async (req, res) => {
   }
 });
 
-// Start the server on port 5000
-app.listen(5000, () => {
-  console.log("Server is running on port 5000");
+// Start the server on port 5001
+app.listen(5001, () => {
+  console.log(`Server is running on port ${port}`);
 });
 
 export default app;

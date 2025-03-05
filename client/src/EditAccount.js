@@ -19,12 +19,11 @@ function EditAccount() {
 
   useEffect(() => {
     // Fetch user data from the server
-    console.log(localStorage.getItem('userEmail'));
     const fetchUserData = async () => {
       try {
         const email = localStorage.getItem('userEmail'); // Assuming email is stored in localStorage
         if (email) {
-          const response = await axios.get('/api/user', { params: { email } });
+          const response = await axios.get('http://localhost:5001/api/user', { params: { email } });
           if (response.data) {
             setUserData(response.data);
           }
@@ -73,7 +72,11 @@ function EditAccount() {
         phone: editData.phone || userData.phone,
         password: editData.password ? editData.password : undefined, // Only send if password is set
       };
-      await axios.put('/api/user', updatedData); // Adjust the endpoint as needed
+      await axios.put('http://localhost:5001/api/user', updatedData, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }); // Adjust the endpoint as needed
       setUserData(updatedData);
       setIsEditing(false);
       setEditData({

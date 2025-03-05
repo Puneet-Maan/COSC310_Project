@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import LogIn from './logIn';
 import AccRegister from './AccRegister';
-import EditAccount from './EditAccount'; // Import EditAccount component
+import EditAccount from './EditAccount';
+import Waitlist from './Waitlist'; // Import Waitlist component
 
 function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('userName'));
@@ -24,7 +25,9 @@ function Home() {
               <Link to="/edit-account" className="text-blue-500 font-bold hover:text-blue-700">Edit Account</Link>
             </li>
           )}
-          {/* Add more links to other features here */}
+          <li className="inline mx-4">
+            <Link to="/waitlist" className="text-blue-500 font-bold hover:text-blue-700">Waitlist</Link>
+          </li>
         </ul>
       </nav>
     </div>
@@ -39,8 +42,8 @@ function App() {
           <Route exact path="/" component={Home} />
           <Route path="/login" component={LogIn} />
           <Route path="/register" component={AccRegister} />
-          <Route path="/edit-account" component={EditAccount} /> {/* Add new route for Edit Account */}
-          {/* Add more routes to other features here */}
+          <Route path="/edit-account" component={EditAccount} />
+          <Route path="/waitlist" component={Waitlist} /> {/* Add new route for Waitlist */}
         </Switch>
       </Router>
     </div>
