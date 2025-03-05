@@ -3,7 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import path from "path"; // Import path module
 import { fileURLToPath } from "url"; // Fix __dirname for ES Modules
-import db from "./db.js"; // Ensure db.js is updated to use ES modules
+import db from "./db.js"; // Import the database connection pool from db.js
+import adminRoutes from "./adminRoutes.js"; // Import admin routes
 
 // Load environment variables
 dotenv.config();
@@ -22,39 +23,56 @@ app.use(express.json());
 // ✅ Serve Static Files
 app.use(express.static(path.join(__dirname, "public")));
 
+// Routes
+app.use("/admin", adminRoutes); // All admin routes will start with /admin
+
 // **API Route: Get All Courses**
 app.get("/api/courses", async (req, res) => {
-    try {
-        const [courses] = await db.query(
-            "SELECT course_code, course_name, department, credits, requires_lab FROM courses"
-        );
+  try {
+    const [courses] = await db.query(
+      "SELECT course_code, course_name, department, credits, requires_lab FROM courses"
+    );
 
-        if (courses.length === 0) {
-            return res.status(404).json({ message: "No courses available" });
-        }
-        res.json(courses);
-    } catch (error) {
-        console.error("❌ Error fetching courses:", error);
-        res.status(500).json({ message: "Server error" });
+    if (courses.length === 0) {
+      return res.status(404).json({ message: "No courses available" });
     }
+    res.json(courses);
+  } catch (error) {
+    console.error("❌ Error fetching courses:", error);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 // **API Route: Get Specific Course by Course Code**
 app.get("/api/courses/:code", async (req, res) => {
-    const courseCode = req.params.code.toUpperCase();
-    try {
-        const [courses] = await db.query("SELECT * FROM courses WHERE course_code = ?", [courseCode]);
-        if (courses.length === 0) {
-            return res.status(404).json({ message: "Course not found" });
-        }
-        res.json(courses[0]);
-    } catch (error) {
-        console.error("❌ Error fetching course:", error);
-        res.status(500).json({ message: "Server error" });
+  const courseCode = req.params.code.toUpperCase();
+  try {
+    const [courses] = await db.query("SELECT * FROM courses WHERE course_code = ?", [courseCode]);
+    if (courses.length === 0) {
+      return res.status(404).json({ message: "Course not found" });
     }
+    res.json(courses[0]);
+  } catch (error) {
+    console.error("❌ Error fetching course:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// **Admin Route: Get All Courses**
+app.get("/admin/courses", async (req, res) => {
+  try {
+    const [courses] = await db.query("SELECT * FROM courses");
+    if (courses.length === 0) {
+      return res.status(404).json({ message: "No courses available" });
+    }
+    res.json(courses);
+  } catch (error) {
+    console.error("❌ Error fetching courses:", error);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 // **Start the Server**
 app.listen(PORT, () => {
-    console.log(`🚀 Server running at http://localhost:${PORT}`);
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
