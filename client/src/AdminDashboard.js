@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function AdminDashboard() {
   const [courseCode, setCourseCode] = useState('');
@@ -6,6 +6,25 @@ function AdminDashboard() {
   const [department, setDepartment] = useState('');
   const [credits, setCredits] = useState('');
   const [requiresLab, setRequiresLab] = useState(false);
+  const [courses, setCourses] = useState([]);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/admin/courses');
+        if (response.ok) {
+          const data = await response.json();
+          setCourses(data);
+        } else {
+          console.error('Failed to fetch courses');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    fetchCourses();
+  }, []);
 
   const handleAddCourse = async () => {
     console.log("Course Code:", courseCode);
@@ -108,6 +127,22 @@ function AdminDashboard() {
             Add Course
           </button>
         </div>
+      </section>
+
+      {/* New section to display all courses */}
+      <section className="mb-8">
+        <h2 className="text-2xl font-semibold mb-4">All Courses</h2>
+        <ul>
+          {courses.map((course) => (
+            <li key={course.course_code} className="border p-2 mb-2">
+              <p><strong>Course Code:</strong> {course.course_code}</p>
+              <p><strong>Course Name:</strong> {course.course_name}</p>
+              <p><strong>Department:</strong> {course.department}</p>
+              <p><strong>Credits:</strong> {course.credits}</p>
+              <p><strong>Requires Lab:</strong> {course.requires_lab ? 'Yes' : 'No'}</p>
+            </li>
+          ))}
+        </ul>
       </section>
     </div>
   );
