@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-
 function AdminDashboard() {
   const [courseCode, setCourseCode] = useState('');
   const [courseName, setCourseName] = useState('');
@@ -10,23 +9,22 @@ function AdminDashboard() {
   const [courses, setCourses] = useState([]);
 
   useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/admin/courses');
-        if (response.ok) {
-          const data = await response.json();
-          setCourses(data);
-        } else {
-          console.error('Failed to fetch courses');
-        }
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    };
-
     fetchCourses();
   }, []);
 
+  const fetchCourses = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/admin/courses');
+      if (response.ok) {
+        const data = await response.json();
+        setCourses(data);
+      } else {
+        console.error('Failed to fetch courses');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   const handleAddCourse = async () => {
     console.log("Course Code:", courseCode);
@@ -63,6 +61,7 @@ function AdminDashboard() {
         setDepartment('');
         setCredits('');
         setRequiresLab(false);
+        fetchCourses(); // Fetch courses again after adding a new course
       } else {
         const data = await response.json();
         alert(data.message);

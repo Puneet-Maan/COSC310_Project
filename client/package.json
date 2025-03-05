@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@tailwindcss/cli": "^4.0.3",
+    "@tailwindcss/postcss": "^4.0.10",
     "axios": "^0.21.1",
     "client": "file:",
     "cra-template": "1.2.0",
@@ -32,7 +33,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "jest-fetch-mock": "^3.0.3",
     "jsdom": "^22.1.0",
-    "postcss": "^8.5.1",
+    "postcss": "^8.5.3",
     "postcss-cli": "^11.0.0",
     "shadcn-ui": "^0.9.4",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17"
