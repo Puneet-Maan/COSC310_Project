@@ -12,7 +12,6 @@ import adminRoutes from './routes/adminRoutes.js'; // Import admin routes
 // Environmental Variables
 dotenv.config();
 
-
 const app = express();
 const port = process.env.PORT || 5000; // Allow dynamic port assignment
 
