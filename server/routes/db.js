@@ -1,6 +1,11 @@
-const mysql = require('mysql2/promise');
-const dotenv = require('dotenv');
-const path = require('path');
+import mysql from 'mysql2/promise';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Load environment variables from .env file
 const result = dotenv.config({ path: path.resolve(__dirname, '../.env') });
@@ -42,4 +47,4 @@ pool.getConnection()
         console.error('Error connecting to the database:', err.message);
     });
 
-module.exports = pool;
+export default pool;

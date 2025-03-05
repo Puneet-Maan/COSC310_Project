@@ -1,20 +1,23 @@
-document.addEventListener("DOMContentLoaded", async () => {
-    const API_URL = "http://localhost:5000/api/courses"; 
+document.addEventListener("DOMContentLoaded", async () => { // wait until HTML is fully loaded before executing script and ensures all elements are available before modifying them
+    const API_URL = "http://localhost:5000/api/courses"; //backend api url
 
-    // Get course code from URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const courseCode = urlParams.get("code");
+    
+    const urlParams = new URLSearchParams(window.location.search); //extracts query parameters from the url
+    const courseCode = urlParams.get("code"); //retrieves value of code parameter 
 
+    
     if (!courseCode) {
         document.getElementById("course-info").innerHTML = "<p>Invalid Course</p>";
         return;
     }
 
+    //fetch course details from backend
     try {
-        const response = await fetch(`${API_URL}/${courseCode}`);
-        if (!response.ok) throw new Error("Course not found");
+        const response = await fetch(`${API_URL}/${courseCode}`); //sends GET reuest 
+        if (!response.ok) throw new Error("Course not found"); 
 
-        const course = await response.json();
+        //convert api response to json
+        const course = await response.json(); //parses api into javascript object course
 
         // Update page content
         document.getElementById("course-title").textContent = course.course_name;
@@ -25,10 +28,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("course-instructor").textContent = course.instructor || "TBA";
         document.getElementById("course-schedule").textContent = course.schedule || "TBA";
 
-        document.getElementById("register-btn").addEventListener("click", () => {
-            alert(`You have registered for ${course.course_name}`);
+        //handle course registration
+        document.getElementById("register-btn").addEventListener("click", () => { //event listener to the register button
+            alert(`You have registered for ${course.course_name}`); //alert box to confirm registration
         });
-    } catch (error) {
+    } catch (error) { //to preven the page from crashing if an error occurs
         console.error("Error fetching course details:", error);
         document.getElementById("course-info").innerHTML = "<p>Course details could not be retrieved.</p>";
     }

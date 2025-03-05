@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const API_URL = "http://localhost:5000/api/courses"; // references APIR URL (fetch course data from backend)
+    const API_URL = "http://localhost:5000/api/courses"; // stores backend endpoint to fetch course data
+    //retrives elements from the HTML page
     const courseTableBody = document.querySelector(".course-table tbody");
     const searchBar = document.getElementById("searchBar");
     const clearSearchButton = document.getElementById("clearSearch");
@@ -12,16 +13,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const pageNumberSpan = document.getElementById("pageNumber");
 
     let courses = []; //store courses fetched from backend
-    let filteredCourses = []; //store courses after filtering
-    let currentPage = 1; //track current page
-    const itemsPerPage = 10; //number of courses per page
+    let filteredCourses = []; 
+    let currentPage = 1; 
+    const itemsPerPage = 10; 
 
-    // Fetch courses from backend
+    
     async function fetchCourses() {
         try {
-            const response = await fetch(API_URL); //to retrieve courses from backend 
+            const response = await fetch(API_URL);  //get courses from the backend
             if (!response.ok) throw new Error("Failed to fetch courses");
-            courses = await response.json(); //parse the response into a javascript object
+            courses = await response.json(); //parse the response into a javascript object & store into courses
             filteredCourses = [...courses]; // Copy courses for filtering
             renderCourses(); //to display courses on the page
         } catch (error) {
@@ -30,12 +31,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Render paginated courses
+    
     function renderCourses() {
         courseTableBody.innerHTML = ""; //clear previous course list 
         const start = (currentPage - 1) * itemsPerPage; //calculate start index
         const end = start + itemsPerPage; //calculate end index
-        const paginatedCourses = filteredCourses.slice(start, end); //extract 10 courses from filteredCourses
+        const paginatedCourses = filteredCourses.slice(start, end); //to get subset of courses
 
         //loop through paginated courses and display them in the table
         paginatedCourses.forEach(course => {
@@ -74,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
             (selectedDepartment === "" || course.department === selectedDepartment)
         );
 
-        sortCourses(); // ensures sorted results are displayed
+        sortCourses(); 
         currentPage = 1; // Reset to first page after filtering
         renderCourses(); //update the displayed courses
     }
