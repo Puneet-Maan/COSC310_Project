@@ -4,7 +4,6 @@
   "description": "Frontend for COSC310 Project",
   "type": "module",
   "main": "script.js",
-  "proxy": "http://localhost:5000",
   "private": true,
   "scripts": {
     "start": "react-scripts start",
@@ -17,6 +16,7 @@
     "axios": "^0.21.1",
     "client": "file:",
     "cra-template": "1.2.0",
+    "http-proxy-middleware": "^3.0.3",
     "lucide-react": "^0.474.0",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-preset-env": "^10.1.3",
