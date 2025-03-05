@@ -19,7 +19,10 @@ function LogIn() {
       if (response.data.success) {
         setUserName(response.data.userName); 
         localStorage.setItem('userName', response.data.userName); 
+        localStorage.setItem('userEmail', email); // Store email in localStorage
+        localStorage.setItem('userPhone', response.data.phone); // Store phone in localStorage
         setIsLoggedIn(true); 
+        history.push('/'); // Redirect to home page
       } else {
         setError('Invalid email or password'); 
       }
@@ -34,6 +37,8 @@ function LogIn() {
     setPassword(''); 
     setError(''); 
     localStorage.removeItem('userName'); 
+    localStorage.removeItem('userEmail'); // Remove email from localStorage
+    localStorage.removeItem('userPhone'); // Remove phone from localStorage
   };
 
   return (

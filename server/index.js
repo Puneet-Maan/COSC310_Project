@@ -6,10 +6,12 @@ import { fileURLToPath } from 'url'; // Fix __dirname for ES Modules
 import pool from './routes/db.js'; // Import MySQL connection
 import authRoutes from './routes/auth.js'; // Import authentication routes
 import registerRoute from './routes/register.js'; // Import registration route
+import editAccRoute from './routes/editAcc.js'; // Import edit account route
 import adminRoutes from './routes/adminRoutes.js'; // Import admin routes
 
-// Load environment variables
+// Environmental Variables
 dotenv.config();
+
 
 const app = express();
 const port = process.env.PORT || 5000; // Allow dynamic port assignment
@@ -33,6 +35,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use('/api', authRoutes); // Use authentication routes under the /api path
 app.use('/api/register', registerRoute); // Use registration route under the /api/register path
 app.use('/admin', adminRoutes); // Use admin routes under the /admin path
+app.use('/api', editAccRoute); // Use edit account route under the /api path
 
 // Handle OPTIONS requests
 app.options('*', cors());
