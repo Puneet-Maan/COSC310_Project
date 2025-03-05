@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
-import logIn from './logIn.js';
-import AccRegister from './AccRegister.js';
-import EditAccount from './EditAccount.js';
-import AdminDashboard from './AdminDashboard.js';
+import LogIn from './pages/logIn.js';
+import AccRegister from './pages/AccRegister.js';
+import EditAccount from './pages/EditAccount.js';
+import AdminDashboard from './pages/AdminDashboard.js';
 
 function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('userName'));
@@ -41,7 +41,7 @@ function App() {
       <Router>
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route path="/login" component={logIn} />
+          <Route path="/login" component={LogIn} />
           <Route path="/register" component={AccRegister} />
           <Route path="/edit-account" component={EditAccount} />
           <Route path="/admin-dashboard" component={AdminDashboard} />

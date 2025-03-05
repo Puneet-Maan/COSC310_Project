@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css'; // Import Tailwind CSS
+import './styles/index.css'; // Corrected path for Tailwind CSS
 import App from './App.js';
 import reportWebVitals from './reportWebVitals.js';
 
