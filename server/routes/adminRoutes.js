@@ -53,4 +53,28 @@ router.get("/courses", async (req, res) => {
   }
 });
 
+
+// Delete a Course
+router.delete("/delete-course/:courseId", async (req, res) => {
+  const { courseId } = req.params;
+
+  // Check if the course exists before attempting to delete
+  const checkQuery = "SELECT * FROM courses WHERE id = ?";
+  const deleteQuery = "DELETE FROM courses WHERE id = ?";
+
+  try {
+    const [course] = await db.query(checkQuery, [courseId]);
+
+    if (course.length === 0) {
+      return res.status(404).json({ message: "Course not found." });
+    }
+
+    await db.query(deleteQuery, [courseId]);
+    res.status(200).json({ message: "Course deleted successfully." });
+  } catch (err) {
+    console.error("Error deleting course:", err);
+    res.status(500).json({ message: "Failed to delete course.", error: err.message });
+  }
+});
+
 export default router;
