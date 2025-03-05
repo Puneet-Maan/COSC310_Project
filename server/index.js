@@ -23,12 +23,13 @@ app.get('/api/test', async (req, res) => {
   }
 });
 
+// fetches all courses from db
 app.get("/api/courses", async (req, res) => {
   try {
     console.log("✅ Fetching courses from the database...");
     const [rows] = await pool.query("SELECT * FROM courses");
     console.log("✅ Courses fetched:", rows);
-    res.json(rows);
+    res.json(rows); //send fetched courses as json to client
   } catch (error) {
     console.error("❌ Error fetching courses:", error);
     res.status(500).json({ message: "Server error" });
@@ -39,13 +40,15 @@ app.get("/", (req, res) => {
   res.send("Welcome to the Null Pointers API! 🎉");
 });
 
-app.get("/api/courses/:course_code", async (req, res) => {
+//fetch course details
+app.get("/api/courses/:course_code", async (req, res) => { 
   try {
-    const { course_code } = req.params;
+    const { course_code } = req.params; //extract course code
     console.log(`✅ Fetching details for course: ${course_code}`);
 
     const [rows] = await pool.query("SELECT * FROM courses WHERE course_code = ?", [course_code]);
 
+    //if not found
     if (rows.length === 0) {
       return res.status(404).json({ message: "Course not found" });
     }
