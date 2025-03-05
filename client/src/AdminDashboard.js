@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
+
 function AdminDashboard() {
   const [courseCode, setCourseCode] = useState('');
   const [courseName, setCourseName] = useState('');
@@ -25,6 +26,7 @@ function AdminDashboard() {
 
     fetchCourses();
   }, []);
+
 
   const handleAddCourse = async () => {
     console.log("Course Code:", courseCode);
@@ -144,6 +146,7 @@ function AdminDashboard() {
           ))}
         </ul>
       </section>
+
     </div>
   );
 }
