@@ -17,7 +17,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentPage = 1; 
     const itemsPerPage = 10; 
 
-    
     async function fetchCourses() {
         try {
             const response = await fetch(API_URL);  //get courses from the backend
@@ -31,7 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    
     function renderCourses() {
         courseTableBody.innerHTML = ""; //clear previous course list 
         const start = (currentPage - 1) * itemsPerPage; //calculate start index
@@ -108,7 +106,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    
     nextButton.addEventListener("click", () => {
         const totalPages = Math.ceil(filteredCourses.length / itemsPerPage);
         if (currentPage < totalPages) {
@@ -128,7 +125,6 @@ document.addEventListener("DOMContentLoaded", () => {
         renderCourses();
     });
 
-    
     searchBar.addEventListener("input", filterCourses);
     filterByDepartment.addEventListener("change", filterCourses);
     sortBy.addEventListener("change", () => {

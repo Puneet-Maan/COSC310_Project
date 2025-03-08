@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import pool from './routes/db.js'; // Import MySQL connection
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -9,6 +10,7 @@ const __dirname = dirname(__filename);
 
 const app = express();
 
+app.use(cors()); // Enable CORS for all routes
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'routes/public')));
 
@@ -32,7 +34,7 @@ app.get("/api/courses", async (req, res) => {
     res.json(rows); //send fetched courses as json to client
   } catch (error) {
     console.error("❌ Error fetching courses:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 });
 

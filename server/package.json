@@ -13,8 +13,9 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "chai": "^4.5.0",
-    "chai-http": "^4.4.0",
+    "chai": "^4.3.7",
+    "chai-http": "^4.3.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "mocha": "^11.1.0",
