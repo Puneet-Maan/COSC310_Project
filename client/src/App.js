@@ -11,6 +11,11 @@ function Home() {
           <li className="inline mx-4">
             <Link to="/login" className="text-blue-500 font-bold hover:text-blue-700">Login</Link>
           </li>
+          <li className="inline mx-4">
+           { /* the link is just to test the browse_course page */}
+            <a href="/browse_course.html" className="text-blue-500 font-bold hover:text-blue-700">Browse Courses</a>
+            <a href="/course-details.html" className="text-blue-500 font-bold hover:text-blue-700">Course-Details</a>
+          </li>
           {/* Add more links to other features here */}
         </ul>
       </nav>
