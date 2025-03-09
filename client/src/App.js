@@ -25,6 +25,10 @@ function Home() {
               <Link to="/edit-account" className="text-blue-500 font-bold hover:text-blue-700">Edit Account</Link>
             </li>
           )}
+          {/* Just Temp this can be removed */}
+          <li className="inline mx-4">
+            <a href="/browse_course.html" className="text-blue-500 font-bold hover:text-blue-700">Browse Courses</a> 
+            </li>
           <li className="inline mx-4">
             <Link to="/admin-dashboard" className="text-blue-500 font-bold hover:text-blue-700">Dashboard</Link>
           </li>
