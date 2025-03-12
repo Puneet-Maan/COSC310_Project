@@ -1,7 +1,7 @@
-import * as chai from "chai";
-import { default as chaiHttp, request } from "chai-http";
+import chai from "chai";
+import chaiHttp from "chai-http";
 chai.use(chaiHttp);
-var expect = chai.expect;
+const { expect, request } = chai;
 
 import app from '../index.js'; // Your Express app entry file
 import pool from '../routes/db.js'; // Import the MySQL connection
@@ -13,7 +13,7 @@ describe('Register API', () => {
   });
 
   it('should register a new user successfully', (done) => {
-    request.execute(app)
+    request(app)
       .post('/api/register')
       .send({
         email: 'test.register@example.com',
@@ -30,7 +30,7 @@ describe('Register API', () => {
   });
 
   it('should fail to register a user with an invalid email', (done) => {
-    request.execute(app)
+    request(app)
       .post('/api/register')
       .send({
         email: 'invalid-email',
@@ -47,7 +47,7 @@ describe('Register API', () => {
   });
 
   it('should fail to register a user with a weak password', (done) => {
-    request.execute(app)
+    request(app)
       .post('/api/register')
       .send({
         email: 'test.register@example.com',

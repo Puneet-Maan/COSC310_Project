@@ -27,7 +27,12 @@ function LogIn() {
         setError('Invalid email or password'); 
       }
     } catch (err) {
-      setError('An error occurred. Please try again.'); 
+      console.error('Error logging in:', err);
+      if (err.response && err.response.data && err.response.data.message) {
+        setError(err.response.data.message);
+      } else {
+        setError(`An error occurred. Please try again. Error: ${err.message}`);
+      }
     }
   };
 
