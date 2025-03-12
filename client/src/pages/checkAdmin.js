@@ -42,12 +42,12 @@ const CheckAdmin = () => {
     }
 
     return (
-        <div>
+        <div className="flex flex-col items-center justify-center min-h-screen">
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {isAdmin ? (
-                <h1>You have admin privileges</h1>
+                <h1 className="text-4xl font-bold mb-8 text-white">You have admin priviledges</h1>
             ) : (
-                <h1>You are not an admin</h1>
+                <h1 className="text-4xl font-bold mb-8 text-white">You do not have admin priviledges</h1>
             )}
         </div>
     );
