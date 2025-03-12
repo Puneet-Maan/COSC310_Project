@@ -1,15 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Link, Switch, useHistory } from 'react-router-dom';
 import LogIn from './pages/logIn.js';
 import AccRegister from './pages/AccRegister.js';
 import EditAccount from './pages/EditAccount.js';
 import AdminDashboard from './pages/AdminDashboard.js';
 import CheckAdmin from './pages/checkAdmin.js'; // Import CheckAdmin component
+import personIcon from './images/personIcon.svg'; // Import person icon
 
 function Header() {
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('userName'));
+  const history = useHistory();
+
+  const handleLogout = () => {
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('userPhone');
+    setIsLoggedIn(false);
+    history.push('/');
+  };
+
   return (
-    <header className="bg-blue-700 text-white p-4" style={{ backgroundColor: 'var(--header-bg-color)' }}>
-      <h1 className="text-2xl font-bold">University of NullPointers</h1>
+    <header className="bg-blue-700 text-white p-4 flex justify-between items-center" style={{ backgroundColor: 'var(--header-bg-color)' }}>
+      <Link to="/" className="text-2xl font-bold">University of NullPointers</Link>
+      <div className="flex items-center">
+        {isLoggedIn && (
+          <span className="mr-4 cursor-pointer" onClick={handleLogout}>Logout</span>
+        )}
+        <Link to={isLoggedIn ? "/edit-account" : "/login"}>
+          <img src={personIcon} alt="Person Icon" className="w-8 h-8 text-white" />
+        </Link>
+      </div>
     </header>
   );
 }

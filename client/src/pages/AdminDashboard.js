@@ -85,7 +85,7 @@ function AdminDashboard() {
             placeholder="Course Code (e.g., CS101)"
             value={courseCode}
             onChange={(e) => setCourseCode(e.target.value)}
-            className="border p-2 w-full mb-2"
+            className="border p-2 w-full mb-2 text-black"
           />
           <input
             type="text"
@@ -93,7 +93,7 @@ function AdminDashboard() {
             placeholder="Course Name (e.g., Introduction to Programming)"
             value={courseName}
             onChange={(e) => setCourseName(e.target.value)}
-            className="border p-2 w-full mb-2"
+            className="border p-2 w-full mb-2 text-black"
           />
           <input
             type="text"
@@ -101,7 +101,7 @@ function AdminDashboard() {
             placeholder="Department (e.g., Computer Science)"
             value={department}
             onChange={(e) => setDepartment(e.target.value)}
-            className="border p-2 w-full mb-2"
+            className="border p-2 w-full mb-2 text-black"
           />
           <input
             type="number"
@@ -109,7 +109,7 @@ function AdminDashboard() {
             placeholder="Credits (e.g., 3)"
             value={credits}
             onChange={(e) => setCredits(e.target.value)}
-            className="border p-2 w-full mb-2"
+            className="border p-2 w-full mb-2 text-black"
           />
           <label htmlFor="requiresLab" className="block mb-2">
             <input

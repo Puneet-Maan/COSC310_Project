@@ -5,105 +5,102 @@ import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 
 function AccRegister() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    password: '',
+    confirmPassword: ''
+  });
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
   const history = useHistory();
 
-  const validatePassword = (password) => {
-    const regex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
-    return regex.test(password);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      setError('Passwords do not match.');
-      return;
-    }
-    if (!validatePassword(password)) {
-      setError('Password must be at least 8 characters long and include an uppercase letter and a number.');
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
       return;
     }
     try {
-      const response = await axios.post('/api/register', { email, password, name, phone });
+      const response = await axios.post('/api/register', formData);
       if (response.data.success) {
-        setSuccess(true);
+        history.push('/login');
       } else {
-        setError(`Registration failed: ${response.data.error}`);
+        setError('Registration failed');
       }
     } catch (err) {
-      console.error('Error during registration:', err);
-      setError(`An error occurred: ${err.response ? err.response.data.error : err.message}`);
+      console.error('Error registering:', err);
+      setError(`An error occurred. Please try again. Error: ${err.message}`);
     }
   };
 
-  const handleClose = () => {
-    setSuccess(false);
-    history.push('/login');
-  };
-
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 text-black">
-      <div className="bg-white p-6 rounded shadow-md w-full max-w-sm mb-4">
-        <h2 className="text-2xl font-bold mb-4">Create an Account</h2>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#1b2a4e] text-white">
+      <div className="bg-white p-6 rounded shadow-md w-full max-w-sm mb-4 text-black">
+        <h2 className="text-2xl font-bold mb-4">Register</h2>
         {error && <p className="text-red-500 mb-4">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
+            <label htmlFor="name" className="block text-gray-700">Name:</label>
             <input
               type="text"
               id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
               required
               className="w-full px-3 py-2 border rounded"
             />
           </div>
           <div className="mb-4">
+            <label htmlFor="email" className="block text-gray-700">Email:</label>
             <input
               type="email"
               id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
               required
               className="w-full px-3 py-2 border rounded"
             />
           </div>
           <div className="mb-4">
+            <label htmlFor="phone" className="block text-gray-700">Phone:</label>
             <input
-              type="tel"
+              type="text"
               id="phone"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="Phone Number"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
               required
               className="w-full px-3 py-2 border rounded"
             />
           </div>
           <div className="mb-4">
+            <label htmlFor="password" className="block text-gray-700">Password:</label>
             <input
               type="password"
               id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
               required
               className="w-full px-3 py-2 border rounded"
             />
           </div>
           <div className="mb-4">
+            <label htmlFor="confirmPassword" className="block text-gray-700">Confirm Password:</label>
             <input
               type="password"
               id="confirmPassword"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Confirm Password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
               required
               className="w-full px-3 py-2 border rounded"
             />
@@ -115,12 +112,6 @@ function AccRegister() {
             Register
           </button>
         </form>
-        <div className="text-center text-sm text-gray-500">
-          Already have an account?{" "}
-          <a href="/login" className="text-blue-500 hover:underline">
-            Log in
-          </a>
-        </div>
       </div>
       <button 
         onClick={() => history.push('/')} 
@@ -128,19 +119,6 @@ function AccRegister() {
       >
         Back to Home
       </button>
-      {success && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded shadow-md text-center">
-            <h2 className="text-2xl font-bold mb-4">Account Successfully Created</h2>
-            <button 
-              onClick={handleClose} 
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
-            >
-              Go to Login
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
