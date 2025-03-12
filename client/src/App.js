@@ -15,7 +15,7 @@ function Home() {
 
   return (
     <div className="text-center mt-12">
-      <h1 className="text-4xl font-bold mb-8 text-white">Welcome to COSC310 Project</h1>
+      <h1 className="text-4xl font-bold mb-8 text-white">University of NullPointers</h1>
       <nav>
         <ul className="list-none p-0">
           <li className="inline mx-4">
