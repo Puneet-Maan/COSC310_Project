@@ -30,7 +30,7 @@ function AccRegister() {
       return;
     }
     try {
-      const response = await axios.post('http://localhost:5001/api/register', { email, password, name, phone });
+      const response = await axios.post('/api/register', { email, password, name, phone });
       if (response.data.success) {
         setSuccess(true);
       } else {
