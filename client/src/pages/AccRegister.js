@@ -27,7 +27,9 @@ function AccRegister() {
       return;
     }
     try {
+
       const response = await axios.post('/api/register', formData);
+
       if (response.data.success) {
         history.push('/login');
       } else {

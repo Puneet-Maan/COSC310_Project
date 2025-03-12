@@ -5,6 +5,7 @@ import AccRegister from './pages/AccRegister.js';
 import EditAccount from './pages/EditAccount.js';
 import AdminDashboard from './pages/AdminDashboard.js';
 import CheckAdmin from './pages/checkAdmin.js'; // Import CheckAdmin component
+import Waitlist from './pages/Waitlist.js';
 import personIcon from './images/personIcon.svg'; // Import person icon
 
 function Header() {
@@ -33,6 +34,7 @@ function Header() {
     </header>
   );
 }
+
 
 function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('userName'));
@@ -65,6 +67,9 @@ function Home() {
             <Link to="/check-admin" className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">Check Admin</Link>
           </li>
           {/* Add more links to other features here */}
+          <li className="inline mx-4">
+            <Link to="/waitlist" className="text-blue-500 font-bold hover:text-blue-700">Waitlist</Link>
+          </li>
         </ul>
       </nav>
     </div>
@@ -83,6 +88,7 @@ function App() {
           <Route path="/edit-account" component={EditAccount} />
           <Route path="/admin-dashboard" component={AdminDashboard} />
           <Route path="/check-admin" component={CheckAdmin} /> {/* Add route for CheckAdmin */}
+          <Route path="/waitlist" component={Waitlist} />
           {/* Add more routes to other features here */}
         </Switch>
       </Router>

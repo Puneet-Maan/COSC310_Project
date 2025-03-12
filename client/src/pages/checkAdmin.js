@@ -15,7 +15,7 @@ const CheckAdmin = () => {
                     setLoading(false);
                     return;
                 }
-                const response = await axios.post('/api/admin/check-admin', { email });
+                const response = await axios.post('http://localhost:5001/api/admin/check-admin', { email });
                 if (response.data.isAdmin) {
                     setIsAdmin(true);
                 } else {
