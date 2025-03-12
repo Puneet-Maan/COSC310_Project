@@ -6,6 +6,14 @@ import EditAccount from './pages/EditAccount.js';
 import AdminDashboard from './pages/AdminDashboard.js';
 import CheckAdmin from './pages/checkAdmin.js'; // Import CheckAdmin component
 
+function Header() {
+  return (
+    <header className="bg-blue-700 text-white p-4" style={{ backgroundColor: 'var(--header-bg-color)' }}>
+      <h1 className="text-2xl font-bold">University of NullPointers</h1>
+    </header>
+  );
+}
+
 function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('userName'));
 
@@ -47,6 +55,7 @@ function App() {
   return (
     <div className="min-h-screen bg-[#1b2a4e] text-white">
       <Router>
+        <Header />
         <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/login" component={LogIn} />
