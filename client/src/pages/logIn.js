@@ -47,8 +47,8 @@ function LogIn() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 text-black">
-      <div className="bg-white p-6 rounded shadow-md w-full max-w-sm mb-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#1b2a4e] text-white">
+      <div className="bg-white p-6 rounded shadow-md w-full max-w-sm mb-4 text-black">
         <h2 className="text-2xl font-bold mb-4">Login</h2>
         {error && <p className="text-red-500 mb-4">{error}</p>}
         <form onSubmit={handleSubmit}>
@@ -89,7 +89,7 @@ function LogIn() {
         </div>
       </div>
       {isLoggedIn && (
-        <div className="bg-white p-6 rounded shadow-md w-full max-w-sm text-center mb-4">
+        <div className="bg-white p-6 rounded shadow-md w-full max-w-sm text-center mb-4 text-black">
           <h2 className="text-2xl font-bold mb-4">Welcome, {userName}!</h2>
           <button 
             onClick={handleLogout} 

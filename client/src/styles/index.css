@@ -2,5 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 @import "tailwindcss";
+
 /* Add global styles here if needed */
+body {
+  background-color: #1b2a4e; /* Navy Blue Theme */
+}
+
+:root {
+  --header-bg-color: #0d1425; /* Navy Blue Theme */
+}
 

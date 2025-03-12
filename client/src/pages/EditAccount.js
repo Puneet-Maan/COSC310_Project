@@ -90,9 +90,9 @@ function EditAccount() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 text-black">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#1b2a4e] text-white">
       <h2 className="text-4xl font-bold mb-8">Edit Account</h2>
-      <div className="bg-white p-6 rounded shadow-md w-full max-w-sm mb-4">
+      <div className="bg-white p-6 rounded shadow-md w-full max-w-sm mb-4 text-black">
         <div>
           <p><strong>Name:</strong> {userData.name}</p>
           <p><strong>Email:</strong> {userData.email}</p>
