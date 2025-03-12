@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Details</title>
+    <style>
+        body {
+            background-color: #1a2a4f;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            color: #000;
+        }
+        .container {
+            width: 50%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>User Details</h2>
+        <p><strong>Name:</strong> <span id="userName"></span></p>
+        <p><strong>Student Number:</strong> <span id="studentNumber"></span></p>
+        <p><strong>Year:</strong> <span id="studentStanding"></span></p>
+        <p><strong>Courses Enrolled:</strong> <span id="coursesEnrolled"></span></p>
+        <p><strong>Expected Graduation:</strong> <span id="expectedGraduation"></span></p>
+        <button onclick="goBack()">Back to Search</button>
+    </div>
+
+    <script>
+        const students = [
+            { id: 1, name: "Aisha Khan", student_number: "10001", standing: "1st Year", courses: "Math101, CS102", graduation: "2028" },
+            { id: 2, name: "Hiroshi Tanaka", student_number: "10002", standing: "2nd Year", courses: "Physics201, Chem202", graduation: "2027" },
+            { id: 3, name: "Fatima Al-Sayed", student_number: "10003", standing: "3rd Year", courses: "Bio301, Hist302", graduation: "2026" },
+            { id: 4, name: "Carlos Mendoza", student_number: "10004", standing: "4th Year", courses: "Econ401, Stats402", graduation: "2025" },
+            { id: 5, name: "Liam O'Connor", student_number: "10005", standing: "2nd Year", courses: "CS201, Math202", graduation: "2027" },
+            { id: 6, name: "Amara Patel", student_number: "10006", standing: "3rd Year", courses: "Eng301, Soc302", graduation: "2026" },
+            { id: 7, name: "Jinwoo Park", student_number: "10007", standing: "1st Year", courses: "Art101, Music102", graduation: "2028" },
+            { id: 8, name: "Zanele Moyo", student_number: "10008", standing: "4th Year", courses: "Med401, Law402", graduation: "2025" },
+            { id: 9, name: "Yusuf Ahmed", student_number: "10009", standing: "3rd Year", courses: "CompSci301, AI302", graduation: "2026" },
+            { id: 10, name: "Sofia Russo", student_number: "10010", standing: "2nd Year", courses: "Lit201, Phil202", graduation: "2027" }
+        ];
+
+        function fetchUserDetails() {
+            const params = new URLSearchParams(window.location.search);
+            const userId = parseInt(params.get('id'));
+
+            const user = students.find(s => s.id === userId);
+            if (!user) {
+                alert("User not found!");
+                window.location.href = "search.html";
+                return;
+            }
+
+            document.getElementById("userName").textContent = user.name;
+            document.getElementById("studentNumber").textContent = user.student_number;
+            document.getElementById("studentStanding").textContent = user.standing;
+            document.getElementById("coursesEnrolled").textContent = user.courses;
+            document.getElementById("expectedGraduation").textContent = user.graduation;
+        }
+
+        function goBack() {
+            window.location.href = "search.html";
+        }
+
+        fetchUserDetails();
+    </script>
+</body>
+</html>
