@@ -24,7 +24,7 @@ function EditAccount() {
       try {
         const email = localStorage.getItem('userEmail'); // Assuming email is stored in localStorage
         if (email) {
-          const response = await axios.get('/api/user', { params: { email } });
+          const response = await axios.get('http://localhost:5001/api/user', { params: { email } });
           if (response.data) {
             setUserData(response.data);
           }

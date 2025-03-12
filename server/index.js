@@ -9,13 +9,14 @@ import registerRoute from './routes/register.js'; // Import registration route
 import editAccRoute from './routes/editAcc.js'; // Import edit account route
 import adminRoutes from './routes/adminRoutes.js'; // Import admin routes
 import bodyParser from 'body-parser';
+import waitlistRoute from './routes/waitlist.js'; // Import waitlist route
 
 
 // Environmental Variables
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 5000; // Allow dynamic port assignment
+const port = process.env.PORT || 5001; // Allow dynamic port assignment
 
 // Fix __dirname in ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -40,6 +41,7 @@ app.use('/api/courses', authRoutes); // Use authentication routes under the /api
 app.use('/admin', adminRoutes); // Use admin routes under the /admin path
 app.use('/api', editAccRoute); // Use edit account route under the /api path
 app.use('/api/admin', adminRoutes); // Add check-admin route under the /api/admin path
+app.use('/api', waitlistRoute);
 
 // Handle OPTIONS requests
 app.options('*', cors());
@@ -126,7 +128,7 @@ app.put("/admin/update-grade/:userId", async (req, res) => {
   }
 });
 
-// Start the server on port 5000
+// Start the server on port 5001
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
