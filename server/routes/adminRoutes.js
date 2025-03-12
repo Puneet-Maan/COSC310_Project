@@ -3,8 +3,59 @@ import db from "./db.js"; // Corrected import path for db.js
 
 const router = express.Router();
 
+// Middleware to check if the user is an admin
+const isAdmin = async (req, res, next) => {
+  const { email } = req.body; // Assuming email is sent in the request body
+
+  if (!email) {
+    return res.status(400).json({ message: "Email is required." });
+  }
+
+  const query = "SELECT role FROM accounts WHERE email = ?";
+  try {
+    const [result] = await db.query(query, [email]);
+
+    if (result.length === 0) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    if (result[0].role !== 'admin') {
+      return res.status(403).json({ message: "Access denied. Admins only." });
+    }
+
+    next();
+  } catch (err) {
+    console.error("Error checking admin role:", err);
+    res.status(500).json({ message: `Failed to check admin role: ${err.message}`, error: err });
+  }
+};
+
+// Route to check if the current user is an admin
+router.post("/check-admin", async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ message: "Email is required." });
+  }
+
+  const query = "SELECT role FROM accounts WHERE email = ?";
+  try {
+    const [result] = await db.query(query, [email]);
+
+    if (result.length === 0) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    const isAdmin = result[0].role === 'admin';
+    res.status(200).json({ isAdmin });
+  } catch (err) {
+    console.error("Error checking admin role:", err);
+    res.status(500).json({ message: `Failed to check admin role: ${err.message}`, error: err });
+  }
+});
+
 // Add a Course
-router.post("/add-course", async (req, res) => {
+router.post("/add-course", isAdmin, async (req, res) => {
   const { course_code, course_name, department, credits, requires_lab } = req.body;
   console.log("Received data:", req.body);
 
@@ -24,7 +75,7 @@ router.post("/add-course", async (req, res) => {
 });
 
 // Update Student Grade
-router.put("/update-grade/:userId", async (req, res) => {
+router.put("/update-grade/:userId", isAdmin, async (req, res) => {
   const { userId } = req.params;
   const { grade } = req.body;
   if (!grade) {
@@ -42,7 +93,7 @@ router.put("/update-grade/:userId", async (req, res) => {
 });
 
 // Get All Courses
-router.get("/courses", async (req, res) => {
+router.get("/courses", isAdmin, async (req, res) => {
   const query = "SELECT * FROM courses";
   try {
     const [results] = await db.query(query);
@@ -53,9 +104,8 @@ router.get("/courses", async (req, res) => {
   }
 });
 
-
 // Delete a Course
-router.delete("/delete-course/:courseId", async (req, res) => {
+router.delete("/delete-course/:courseId", isAdmin, async (req, res) => {
   const { courseId } = req.params;
 
   // Check if the course exists before attempting to delete

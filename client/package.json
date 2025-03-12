@@ -4,6 +4,7 @@
   "description": "Frontend for COSC310 Project",
   "type": "module",
   "main": "script.js",
+  "proxy": "http://localhost:5000",
   "private": true,
   "scripts": {
     "start": "react-scripts start",

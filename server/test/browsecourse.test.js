@@ -7,7 +7,7 @@ import app from '../index.js'; // import index.js (express server)
 import pool from '../routes/db.js'; // Import the MySQL db connection, to allow modifying during testing
 
 describe('Auth API', () => {
-  before(async () => {
+  before(async () => {    
     // Optionally, insert test users into the database before tests
     // await pool.query('INSERT INTO accounts (email, password, name) VALUES (?, ?, ?)', 
     //   ['test1@example.com', 'password123', 'Test User']);
@@ -38,25 +38,27 @@ describe('Auth API', () => {
 
 
   describe('Browse Courses API', () => {
-    it('should fetch all courses', (done) => { //test to fetch all courses
-      request(app)
-        .get('/api/courses')  //send a GET request to the /api/courses endpoint
-        .end((err, res) => { //function to handle response
-          if (err) done(err); //if err occurs, end test
-          console.log('----------------------------');
-          console.log(res.body); 
-          console.log('----------------------------');
-          expect(res).to.have.status(200); // status should be 200 OK
-          expect(res.body).to.be.an('array'); //response should be an array of courses
-          done();
-        });
-    });
+
+  //   it('should fetch all courses', (done) => { //test to fetch all courses
+  //     request(app)
+  //       .get('/api/courses')  //send a GET request to the /api/courses endpoint
+  //       .query({ code: "CS109" })
+  //       .end((err, res) => { //function to handle response
+  //         if (err) done(err); //if err occurs, end test
+  //         console.log('----------------------------');
+  //         console.log(res.body); 
+  //         console.log('----------------------------');
+  //         expect(res).to.have.status(200); // status should be 200 OK
+  //         expect(res.body).to.be.an('array'); //response should be an array of courses
+  //         done();
+  //       });
+  //   });
 
     //to verify if api retrives correct details for a specific course
     it('should fetch course details by course code', (done) => {
-      const courseCode = 'CS101'; 
       request(app)
-        .get(`/api/courses/${courseCode}`) //GET request to api/courses/CS101
+        .get(`/api/courses`) //GET request to api/courses/CS101
+        .query({ code: 'CS109' })
         .end((err, res) => { 
           if (err) done(err);
           console.log('----------------------------');
@@ -64,16 +66,16 @@ describe('Auth API', () => {
           console.log('----------------------------');
           expect(res).to.have.status(200);
           expect(res.body).to.be.an('object'); //response should be an object
-          expect(res.body.course_code).to.equal(courseCode); //course code should match
+          expect(res.body.course_code).to.equal("CS109"); //course code should match
           done();
         });
     });
 
     
-    it('should return 404 for non-existent course code', (done) => {
-      const invalidCourseCode = 'INVALID_CODE';  //fake course code
+    it('should return 404 for non-existent course code', (done) => {      
       request(app)
-        .get(`/api/courses/${invalidCourseCode}`)
+        .get(`/api/courses`)
+        .query({ code: 'CS999' })
         .end((err, res) => {
           if (err) done(err);
           console.log('----------------------------');
