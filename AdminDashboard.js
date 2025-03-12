@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import Waitlist from './Waitlist.js';
 
 function AdminDashboard() {
   const [courseCode, setCourseCode] = useState('');
@@ -6,25 +8,6 @@ function AdminDashboard() {
   const [department, setDepartment] = useState('');
   const [credits, setCredits] = useState('');
   const [requiresLab, setRequiresLab] = useState(false);
-  const [courses, setCourses] = useState([]);
-
-  useEffect(() => {
-    fetchCourses();
-  }, []);
-
-  const fetchCourses = async () => {
-    try {
-      const response = await fetch('http://localhost:5001/admin/courses');
-      if (response.ok) {
-        const data = await response.json();
-        setCourses(data);
-      } else {
-        console.error('Failed to fetch courses');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
 
   const handleAddCourse = async () => {
     console.log("Course Code:", courseCode);
@@ -39,7 +22,7 @@ function AdminDashboard() {
     }
 
     try {
-      const response = await fetch('http://localhost:5001/admin/add-course', {
+      const response = await fetch('http://localhost:3000/admin/add-course', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -61,7 +44,6 @@ function AdminDashboard() {
         setDepartment('');
         setCredits('');
         setRequiresLab(false);
-        fetchCourses(); // Fetch courses again after adding a new course
       } else {
         const data = await response.json();
         alert(data.message);
@@ -130,22 +112,17 @@ function AdminDashboard() {
         </div>
       </section>
 
-      {/* New section to display all courses */}
       <section className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4">All Courses</h2>
-        <ul>
-          {courses.map((course) => (
-            <li key={course.course_code} className="border p-2 mb-2">
-              <p><strong>Course Code:</strong> {course.course_code}</p>
-              <p><strong>Course Name:</strong> {course.course_name}</p>
-              <p><strong>Department:</strong> {course.department}</p>
-              <p><strong>Credits:</strong> {course.credits}</p>
-              <p><strong>Requires Lab:</strong> {course.requires_lab ? 'Yes' : 'No'}</p>
-            </li>
-          ))}
-        </ul>
+        <h2 className="text-2xl font-semibold mb-4">Waitlist Management</h2>
+        <Waitlist />
       </section>
 
+      <section className="mb-8">
+        <h2 className="text-2xl font-semibold mb-4">Student Management</h2>
+        <Link to="/student-management" className="bg-blue-500 text-white p-2 rounded">
+          Manage Students
+        </Link>
+      </section>
     </div>
   );
 }

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
-import LogIn from './pages/logIn.js';
-import AccRegister from './pages/AccRegister.js';
-import EditAccount from './pages/EditAccount.js';
-import AdminDashboard from './pages/AdminDashboard.js';
-import CheckAdmin from './pages/checkAdmin.js'; // Import CheckAdmin component
-import Waitlist from './pages/Waitlist.js';
+import logIn from './logIn.js';
+import AccRegister from './AccRegister.js';
+import EditAccount from './EditAccount.js';
+import AdminDashboard from './AdminDashboard.js';
+import StudentManagement from './StudentManagement.js'; // Import the StudentManagement component
 
 function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('userName'));
@@ -27,20 +26,13 @@ function Home() {
               <Link to="/edit-account" className="text-blue-500 font-bold hover:text-blue-700">Edit Account</Link>
             </li>
           )}
-          {/* Just Temp this can be removed */}
-          <li className="inline mx-4">
-            <a href="/browse_course.html" className="text-blue-500 font-bold hover:text-blue-700">Browse Courses</a> 
-          </li>
           <li className="inline mx-4">
             <Link to="/admin-dashboard" className="text-blue-500 font-bold hover:text-blue-700">Dashboard</Link>
           </li>
           <li className="inline mx-4">
-            <Link to="/check-admin" className="text-blue-500 font-bold hover:text-blue-700">Check Admin</Link>
+            <Link to="/student-management" className="text-blue-500 font-bold hover:text-blue-700">Student Management</Link>
           </li>
           {/* Add more links to other features here */}
-          <li className="inline mx-4">
-            <Link to="/waitlist" className="text-blue-500 font-bold hover:text-blue-700">Waitlist</Link>
-          </li>
         </ul>
       </nav>
     </div>
@@ -53,12 +45,11 @@ function App() {
       <Router>
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route path="/login" component={LogIn} />
+          <Route path="/login" component={logIn} />
           <Route path="/register" component={AccRegister} />
           <Route path="/edit-account" component={EditAccount} />
           <Route path="/admin-dashboard" component={AdminDashboard} />
-          <Route path="/check-admin" component={CheckAdmin} /> {/* Add route for CheckAdmin */}
-          <Route path="/waitlist" component={Waitlist} />
+          <Route path="/student-management" component={StudentManagement} /> {/* Add the route for StudentManagement */}
           {/* Add more routes to other features here */}
         </Switch>
       </Router>
