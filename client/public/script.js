@@ -132,5 +132,17 @@ document.addEventListener("DOMContentLoaded", () => {
         renderCourses();
     });
 
+    document.addEventListener("DOMContentLoaded", () => {
+        // Existing code...
+    
+        // Back to Home button functionality
+        const backToHomeBtn = document.getElementById("backToHomeBtn");
+        if (backToHomeBtn) {
+            backToHomeBtn.addEventListener("click", () => {
+                window.location.href = "/"; // Redirects to the home page
+            });
+        }
+    });
+
     fetchCourses(); // Initial fetch
 });
