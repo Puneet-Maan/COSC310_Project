@@ -6,9 +6,10 @@ import EditAccount from './pages/EditAccount.js';
 import AdminDashboard from './pages/AdminDashboard.js';
 import CheckAdmin from './pages/checkAdmin.js'; // Import CheckAdmin component
 import Waitlist from './pages/Waitlist.js';
+import StudentManagement from './pages/StudentManagement.js'; // Import StudentManagement component
 import personIcon from './images/personIcon.svg'; // Import person icon
 
-function Header() {
+export function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('userName'));
   const history = useHistory();
 
@@ -49,26 +50,26 @@ function Home() {
       <nav>
         <ul className="list-none p-0">
           <li className="inline mx-4">
-            <Link to="/login" className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">Login</Link>
+            <Link to="/login" className="text-blue-500 font-bold hover:text-blue-700">Login</Link>
           </li>
           {isLoggedIn && (
             <li className="inline mx-4">
-              <Link to="/edit-account" className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">Edit Account</Link>
+              <Link to="/edit-account" className="text-blue-500 font-bold hover:text-blue-700">Edit Account</Link>
             </li>
           )}
           {/* Just Temp this can be removed */}
           <li className="inline mx-4">
-            <a href="/browse_course.html" className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">Browse Courses</a> 
+            <a href="/browse_course.html" className="text-blue-500 font-bold hover:text-blue-700">Browse Courses</a> 
           </li>
           <li className="inline mx-4">
-            <Link to="/admin-dashboard" className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">Dashboard</Link>
-          </li>
-          <li className="inline mx-4">
-            <Link to="/check-admin" className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">Check Admin</Link>
+            <Link to="/admin-dashboard" className="text-blue-500 font-bold hover:text-blue-700">Dashboard</Link>
           </li>
           {/* Add more links to other features here */}
           <li className="inline mx-4">
             <Link to="/waitlist" className="text-blue-500 font-bold hover:text-blue-700">Waitlist</Link>
+          </li>
+          <li className="inline mx-4">
+            <Link to="/student-management" className="text-blue-500 font-bold hover:text-blue-700">Student Management</Link>
           </li>
         </ul>
       </nav>
@@ -89,6 +90,7 @@ function App() {
           <Route path="/admin-dashboard" component={AdminDashboard} />
           <Route path="/check-admin" component={CheckAdmin} /> {/* Add route for CheckAdmin */}
           <Route path="/waitlist" component={Waitlist} />
+          <Route path="/student-management" component={StudentManagement} /> {/* Add route for StudentManagement */}
           {/* Add more routes to other features here */}
         </Switch>
       </Router>

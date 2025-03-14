@@ -10,14 +10,13 @@ import editAccRoute from './routes/editAcc.js'; // Import edit account route
 import adminRoutes from './routes/adminRoutes.js'; // Import admin routes
 import bodyParser from 'body-parser';
 import waitlistRoute from './routes/waitlist.js'; // Import waitlist route
-
+import studentRoutes from './routes/student.js'; // Import student routes
 
 // Environmental Variables
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 5001; // Allow dynamic port assignment
-
+const port = process.env.PORT || 5000; // Allow dynamic port assignment
 // Fix __dirname in ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -42,6 +41,7 @@ app.use('/admin', adminRoutes); // Use admin routes under the /admin path
 app.use('/api', editAccRoute); // Use edit account route under the /api path
 app.use('/api/admin', adminRoutes); // Add check-admin route under the /api/admin path
 app.use('/api', waitlistRoute);
+app.use('/api', studentRoutes); // Use student routes under the /api path
 
 // Handle OPTIONS requests
 app.options('*', cors());
@@ -63,9 +63,9 @@ app.get('/api/test-db', async (req, res) => {
 });
 
 // **API Route: Get Specific Course by Course Code**
-app.get('/api/courses/:code?', async (req, res) => {  
+app.get('/api/courses/:code', async (req, res) => {  
   console.log("Requesting course details...");
-  const courseCode = req.query.code?.toUpperCase();
+  const courseCode = req.params.code.toUpperCase();
   console.log("Course code:", courseCode);
   try {
     const [courses] = await pool.query("SELECT * FROM courses WHERE course_code = ?", [courseCode]);
@@ -80,7 +80,7 @@ app.get('/api/courses/:code?', async (req, res) => {
 });
 
 // **Admin Route: Get All Courses**
-app.get("/admin/courses", async (req, res) => {
+app.get("/api/courses", async (req, res) => {
   try {
     const [courses] = await pool.query("SELECT * FROM courses");
     if (courses.length === 0) {
@@ -96,7 +96,10 @@ app.get("/admin/courses", async (req, res) => {
 // Function to create a course
 app.post("/admin/add-course", async (req, res) => {
   const { course_code, course_name, department, credits, requires_lab } = req.body;
+  console.log("Received data:", req.body); // Log received data for debugging
+
   if (!course_code || !course_name || !department || !credits) {
+    console.log("Missing fields:", { course_code, course_name, department, credits }); // Log missing fields
     return res.status(400).json({ message: "All fields are required." });
   }
 
@@ -105,7 +108,7 @@ app.post("/admin/add-course", async (req, res) => {
     const [result] = await pool.query(query, [course_code, course_name, department, credits, requires_lab]);
     res.status(201).json({ message: "Course created successfully", courseId: result.insertId });
   } catch (err) {
-    console.error("Error creating course:", err);
+    console.error("Error creating course:", err); // Log error details
     res.status(500).json({ message: "Failed to create course.", error: err.message });
   }
 });
@@ -128,7 +131,7 @@ app.put("/admin/update-grade/:userId", async (req, res) => {
   }
 });
 
-// Start the server on port 5001
+// Start the server on port 5000
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

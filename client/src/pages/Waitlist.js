@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Header } from '../App.js'; // Import the Header component from App.js
 
 function Waitlist() {
   const [studentId, setStudentId] = useState('');
@@ -12,7 +13,7 @@ function Waitlist() {
 
   const fetchWaitlist = async () => {
     try {
-      const response = await axios.get('http://localhost:5001/api/waitlist');
+      const response = await axios.get('http://localhost:5000/api/waitlist');
       console.log('Fetched waitlist data:', response.data);
       setWaitlist(response.data);
       setFilteredWaitlist(response.data); // Initially set filteredWaitlist to all waitlist entries
@@ -35,7 +36,7 @@ function Waitlist() {
       return;
     }
     try {
-      const response = await axios.post('http://localhost:5001/api/waitlist', { student_id: studentId, section_id: sectionId }, {
+      const response = await axios.post('http://localhost:5000/api/waitlist', { student_id: studentId, section_id: sectionId }, {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -56,7 +57,7 @@ function Waitlist() {
 
   const handleRemove = async (studentId, sectionId) => {
     try {
-      const response = await axios.delete('http://localhost:5001/api/waitlist', {
+      const response = await axios.delete('http://localhost:5000/api/waitlist', {
         data: { student_id: studentId, section_id: sectionId }
       });
       if (response.data.success) {
@@ -80,9 +81,10 @@ function Waitlist() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 text-black">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#1b2a4e] text-white">
+      <Header /> {/* Add the Header component */}
       <h2 className="text-4xl font-bold mb-8">Join the Waitlist</h2>
-      <div className="bg-white p-6 rounded shadow-md w-full max-w-sm mb-4">
+      <div className="bg-white p-6 rounded shadow-md w-full max-w-sm mb-4 text-black">
         {error && <p className="text-red-500 mb-4">{error}</p>}
         {success && <p className="text-green-500 mb-4">Successfully added to the waitlist</p>}
         <form onSubmit={handleSubmit}>
@@ -110,13 +112,13 @@ function Waitlist() {
           </div>
           <button 
             type="submit" 
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 w-full mb-4"
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 w-full mb-4 border-none"
           >
             Join Waitlist
           </button>
         </form>
       </div>
-      <div className="bg-white p-6 rounded shadow-md w-full max-w-sm">
+      <div className="bg-white p-6 rounded shadow-md w-full max-w-sm text-black">
         <h2 className="text-2xl font-bold mb-4">Current Waitlist</h2>
         <input
           type="text"
@@ -127,7 +129,7 @@ function Waitlist() {
         />
         <button 
           onClick={handleSearch} 
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 mb-4"
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 mb-4 border-none"
         >
           Search
         </button>
@@ -138,7 +140,7 @@ function Waitlist() {
               <p><strong>Section ID:</strong> {entry.section_id}</p>
               <p><strong>Added At:</strong> {new Date(entry.added_at).toLocaleString()}</p>
               <button
-                className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-700 mt-2"
+                className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-700 mt-2 border-none"
                 onClick={() => handleRemove(entry.student_id, entry.section_id)}
               >
                 Remove
