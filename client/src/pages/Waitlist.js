@@ -37,9 +37,9 @@ function Waitlist() {
     }
     try {
       const response = await axios.post('http://localhost:5000/api/waitlist', { student_id: studentId, section_id: sectionId }, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        // headers: {
+        //   'Content-Type': 'application/json'
+        // }
       });
       if (response.data.success) {
         setSuccess(true);
@@ -82,7 +82,6 @@ function Waitlist() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#1b2a4e] text-white">
-      <Header /> {/* Add the Header component */}
       <h2 className="text-4xl font-bold mb-8">Join the Waitlist</h2>
       <div className="bg-white p-6 rounded shadow-md w-full max-w-sm mb-4 text-black">
         {error && <p className="text-red-500 mb-4">{error}</p>}

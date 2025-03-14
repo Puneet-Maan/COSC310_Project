@@ -62,7 +62,10 @@ function Home() {
             <a href="/browse_course.html" className="text-blue-500 font-bold hover:text-blue-700">Browse Courses</a> 
           </li>
           <li className="inline mx-4">
-            <Link to="/admin-dashboard" className="text-blue-500 font-bold hover:text-blue-700">Dashboard</Link>
+            <a href="/dashboard.html" className="text-blue-500 font-bold hover:text-blue-700">Dashboard</a>
+          </li>
+          <li className="inline mx-4">
+            <Link to="/check-admin" className="text-blue-500 font-bold hover:text-blue-700">Check Admin</Link>
           </li>
           {/* Add more links to other features here */}
           <li className="inline mx-4">
