@@ -3,22 +3,24 @@
 ## How to Run the Project
 
 ### Docker Setup for Full Deployment
+1. Clone the repository
+   
 
-1. Build the backend Docker image:
+2. Build the backend Docker image:
 
    ```bash
    cd server
    docker build -t server-image .
    ```
 
-2. Build the frontend Docker image:
+3. Build the frontend Docker image:
 
    ```bash
    cd client
    docker build -t client-image .
    ```
 
-3. Navigate back to the root directory and start the application using Docker Compose:
+4. Navigate back to the root directory and start the application using Docker Compose:
 
    ```bash
    cd ..
