@@ -3,6 +3,7 @@
 # Variables
 DB_NAME="nullPointersDatabase"
 DB_USER="root"
+DB_PASSWORD="root"
 DB_HOST="127.0.0.1"
 DB_PORT="3306"
 
@@ -104,4 +105,4 @@ INSERT INTO course_lab_sections (section_id, lab_schedule, lab_room) VALUES
 "
 
 # Execute the SQL command
-psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME -c "$SQL_COMMAND"
+mysql -h $DB_HOST -P $DB_PORT -u $DB_USER -p$DB_PASSWORD $DB_NAME -e "$SQL_COMMAND"
