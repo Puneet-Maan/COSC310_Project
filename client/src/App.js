@@ -8,6 +8,7 @@ import CheckAdmin from './pages/checkAdmin.js'; // Import CheckAdmin component
 import Waitlist from './pages/Waitlist.js';
 import StudentManagement from './pages/StudentManagement.js'; // Import StudentManagement component
 import personIcon from './images/personIcon.svg'; // Import person icon
+import ViewCourses from './pages/viewCourses.js'; // Import ViewCourses component
 
 export function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('userName'));
@@ -74,6 +75,9 @@ function Home() {
           <li className="inline mx-4">
             <Link to="/student-management" className="text-blue-500 font-bold hover:text-blue-700">Student Management</Link>
           </li>
+          <li className="inline mx-4">
+            <Link to="/view-courses" className="text-blue-500 font-bold hover:text-blue-700">View Courses</Link>
+          </li>
         </ul>
       </nav>
     </div>
@@ -94,6 +98,7 @@ function App() {
           <Route path="/check-admin" component={CheckAdmin} /> {/* Add route for CheckAdmin */}
           <Route path="/waitlist" component={Waitlist} />
           <Route path="/student-management" component={StudentManagement} /> {/* Add route for StudentManagement */}
+          <Route path="/view-courses" component={ViewCourses} /> {/* Add route for ViewCourses */}
           {/* Add more routes to other features here */}
         </Switch>
       </Router>
