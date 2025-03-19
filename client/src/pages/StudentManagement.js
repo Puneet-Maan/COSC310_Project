@@ -85,6 +85,24 @@ function StudentManagement() {
     setModalIsOpen(false);
   };
 
+  const handleExport = async (format) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/students/export/${format}`);
+      if (!response.ok) throw new Error("Failed to download");
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `students_report.${format}`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error("Export failed:", error);
+    }
+  };
+
   return (
     <div className="container mx-auto p-4">
       <h2 className="text-2xl font-semibold mb-4">Student Management</h2>
@@ -152,6 +170,17 @@ function StudentManagement() {
           {editingId ? 'Update Student' : 'Add Student'}
         </button>
       </div>
+      <div className="mb-4">
+        <button onClick={() => handleExport("json")} className="bg-blue-500 text-white p-2 rounded">
+          Export JSON
+        </button>
+        <button onClick={() => handleExport("csv")} className="bg-green-500 text-white p-2 rounded ml-2">
+          Export CSV
+        </button>
+        <button onClick={() => handleExport("txt")} className="bg-gray-500 text-white p-2 rounded ml-2">
+          Export TXT
+        </button>
+      </div>
       <ul>
         {students.map(student => (
           <li key={student.id} className="mb-2">
@@ -184,23 +213,25 @@ function StudentManagement() {
           className="modal"
           overlayClassName="overlay"
         >
-          <h2 className="text-2xl font-semibold mb-4">Student Details</h2>
-          <p><strong>Name:</strong> {selectedStudent.name}</p>
-          <p><strong>Current Courses:</strong></p>
-          <ul>
-            {selectedStudent.courses.map((course, index) => (
-              <li key={index}>{course}</li>
-            ))}
-          </ul>
-          <p><strong>Past Courses:</strong></p>
-          <ul>
-            {selectedStudent.pastCourses.map((course, index) => (
-              <li key={index}>
-                {course.name} - Grade: {course.grade} ({course.percentage}%)
-              </li>
-            ))}
-          </ul>
-          <button onClick={closeModal} className="bg-blue-500 text-white p-2 rounded mt-4">Close</button>
+          <div className="text-black">
+            <h2 className="text-2xl font-semibold mb-4">Student Details</h2>
+            <p><strong>Name:</strong> {selectedStudent.name}</p>
+            <p><strong>Current Courses:</strong></p>
+            <ul>
+              {selectedStudent.courses.map((course, index) => (
+                <li key={index}>{course}</li>
+              ))}
+            </ul>
+            <p><strong>Past Courses:</strong></p>
+            <ul>
+              {selectedStudent.pastCourses.map((course, index) => (
+                <li key={index}>
+                  {course.name} - Grade: {course.grade} ({course.percentage}%)
+                </li>
+              ))}
+            </ul>
+            <button onClick={closeModal} className="bg-blue-500 text-white p-2 rounded mt-4">Close</button>
+          </div>
         </Modal>
       )}
     </div>

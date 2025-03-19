@@ -30,7 +30,6 @@ CREATE TABLE sections (
     instructor VARCHAR(100) NOT NULL,            -- Instructor's name
     schedule VARCHAR(255) NOT NULL,              -- Class schedule (e.g., "Mon/Wed 10-11 AM")
     room VARCHAR(50) NULL,                       -- Classroom location
-    FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE CASCADE
 );
 
 -- Table: planned_schedules (stores students' planned courses before enrollment)
@@ -39,8 +38,6 @@ CREATE TABLE planned_schedules (
     student_id INT NOT NULL,                 -- References the student creating the plan
     section_id INT NOT NULL,                 -- Course section added to the plan
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Timestamp for when the plan was made
-    FOREIGN KEY (student_id) REFERENCES accounts(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (section_id) REFERENCES sections(section_id) ON DELETE CASCADE
 );
 
 -- Table: enrollments (tracks students' courses and grades)
@@ -49,8 +46,7 @@ CREATE TABLE enrollments (
     student_id INT NOT NULL,                       -- References the student (from accounts)
     section_id INT NOT NULL,                       -- References the course section
     grade VARCHAR(5) NULL,                         -- Final grade (e.g., "A", "B+", "C")
-    FOREIGN KEY (student_id) REFERENCES accounts(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (section_id) REFERENCES sections(section_id) ON DELETE CASCADE
+
 );
 
 -- Table: prerequisites (stores course prerequisite relationships)
@@ -58,8 +54,6 @@ CREATE TABLE prerequisites (
     course_id INT NOT NULL,       -- The course that requires a prerequisite
     prereq_course_id INT NOT NULL,-- The required prerequisite course
     PRIMARY KEY (course_id, prereq_course_id),
-    FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE CASCADE,
-    FOREIGN KEY (prereq_course_id) REFERENCES courses(course_id) ON DELETE CASCADE
 );
 
 -- Table: course_lab_sections (stores lab sections for courses that require labs)
@@ -68,7 +62,6 @@ CREATE TABLE course_lab_sections (
     section_id INT NOT NULL,                -- References the course section
     lab_schedule VARCHAR(255) NOT NULL,     -- Lab schedule (e.g., "Thu 2-4 PM")
     lab_room VARCHAR(50) NULL,              -- Lab location
-    FOREIGN KEY (section_id) REFERENCES sections(section_id) ON DELETE CASCADE
 );
 
 CREATE TABLE courses (

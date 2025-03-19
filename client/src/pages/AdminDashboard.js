@@ -88,7 +88,7 @@ function AdminDashboard() {
   // Fetch all courses
   const fetchCourses = async () => {
     try {
-      const response = await fetch('http://localhost:5001/admin/courses');
+      const response = await fetch('http://localhost:5000/admin/courses');
       if (response.ok) {
         const data = await response.json();
         setCourses(data);
@@ -103,7 +103,7 @@ function AdminDashboard() {
   // Add a new course
   const handleAddCourse = async (courseCode, courseName, department, credits, requiresLab) => {
     try {
-      const response = await fetch('http://localhost:5001/admin/add-course', {
+      const response = await fetch('http://localhost:5000/admin/add-course', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -122,10 +122,11 @@ function AdminDashboard() {
         fetchCourses(); // Fetch courses again after adding a new one
       } else {
         const data = await response.json();
-        alert(data.message);
+        console.error('Server Response:', data); // Log server response
+        alert(data.message || 'Failed to add course.');
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error:', error); // Log error details
       alert('Failed to add course.');
     }
   };

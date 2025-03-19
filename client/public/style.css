@@ -13,6 +13,16 @@ header {
     font-size: 20px;
 }
 
+header a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+header a:hover {
+    color: #999797; /* Slightly darker white */
+}
+
 /* ✅ Search Filter Section */
 .search-filter {
     display: flex;
@@ -62,6 +72,15 @@ table tr:nth-child(odd) {
     color: black;
 }
 
+/* Course link color based on row color */
+table tr:nth-child(even) .course-link {
+    color: white;
+}
+
+table tr:nth-child(odd) .course-link {
+    color: black;
+}
+
 /*  Pagination Buttons */
 .pagination {
     display: flex;
@@ -104,4 +123,14 @@ table tr:nth-child(odd) {
     table {
         width: 100%;
     }
+}
+
+.course-link {
+    color: black;
+    text-decoration: none;
+}
+
+/* Optional: Add hover effect */
+.course-link:hover {
+    text-decoration: underline;
 }

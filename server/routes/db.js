@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const pool = mysql.createPool({
+const poolConfig = {
   host: process.env.DB_HOST || 'localhost', // Database host
   user: process.env.DB_USER || 'root', // Database user
   password: process.env.DB_PASSWORD || 'root', // Database password
@@ -11,8 +11,10 @@ const pool = mysql.createPool({
   port: process.env.DB_PORT || 3306, // Database port
   waitForConnections: true,
   connectionLimit: 10,
+  connectTimeout: 30000,
   queueLimit: 0
-});
+}
 
+const pool = mysql.createPool(poolConfig);
 
 export default pool; // Export the connection pool

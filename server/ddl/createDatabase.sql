@@ -12,6 +12,20 @@ CREATE TABLE accounts (
     password VARCHAR(255) NOT NULL           -- Hashed password for security
 );
 
+CREATE TABLE IF NOT EXISTS students (
+             id INT AUTO_INCREMENT PRIMARY KEY,
+             name VARCHAR(255) NOT NULL,
+             course VARCHAR(255),
+             grade FLOAT,
+             email VARCHAR(255),
+             contact VARCHAR(20),
+             address VARCHAR(255),
+            status VARCHAR(50),
+             nationality VARCHAR(50),
+             program VARCHAR(255),
+             faculty VARCHAR(255)
+);
+
 -- Table: courses (stores general course details)
 CREATE TABLE courses (
     course_id INT AUTO_INCREMENT PRIMARY KEY, -- Unique ID for each course

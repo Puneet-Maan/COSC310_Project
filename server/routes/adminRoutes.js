@@ -4,6 +4,7 @@ import db from "./db.js"; // Corrected import path for db.js
 const router = express.Router();
 
 // Middleware to check if the user is an admin
+// add this to features when complete to ensure only admin can access the route
 const isAdmin = async (req, res, next) => {
   const { email } = req.body; // Assuming email is sent in the request body
 
@@ -55,12 +56,12 @@ router.post("/check-admin", async (req, res) => {
 });
 
 // Add a Course
-router.post("/add-course", isAdmin, async (req, res) => {
+router.post("/add-course",  async (req, res) => {
   const { course_code, course_name, department, credits, requires_lab } = req.body;
-  console.log("Received data:", req.body);
+  console.log("Received data:", req.body); // Log received data for debugging
 
   if (!course_code || !course_name || !department || !credits) {
-    console.log("Missing fields:", { course_code, course_name, department, credits });
+    console.log("Missing fields:", { course_code, course_name, department, credits }); // Log missing fields
     return res.status(400).json({ message: "All fields are required." });
   }
 
@@ -69,13 +70,13 @@ router.post("/add-course", isAdmin, async (req, res) => {
     const [result] = await db.query(query, [course_code, course_name, department, credits, requires_lab]);
     res.status(201).json({ message: "Course created successfully", courseId: result.insertId });
   } catch (err) {
-    console.error("Error creating course:", err);
+    console.error("Error creating course:", err); // Log error details
     res.status(500).json({ message: "Failed to create course.", error: err.message });
   }
 });
 
 // Update Student Grade
-router.put("/update-grade/:userId", isAdmin, async (req, res) => {
+router.put("/update-grade/:userId",  async (req, res) => {
   const { userId } = req.params;
   const { grade } = req.body;
   if (!grade) {
@@ -93,7 +94,7 @@ router.put("/update-grade/:userId", isAdmin, async (req, res) => {
 });
 
 // Get All Courses
-router.get("/courses", isAdmin, async (req, res) => {
+router.get("/courses",  async (req, res) => {
   const query = "SELECT * FROM courses";
   try {
     const [results] = await db.query(query);
@@ -105,7 +106,7 @@ router.get("/courses", isAdmin, async (req, res) => {
 });
 
 // Delete a Course
-router.delete("/delete-course/:courseId", isAdmin, async (req, res) => {
+router.delete("/delete-course/:courseId",  async (req, res) => {
   const { courseId } = req.params;
 
   // Check if the course exists before attempting to delete
