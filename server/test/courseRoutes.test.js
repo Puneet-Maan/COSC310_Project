@@ -16,6 +16,7 @@ describe('Auth API', () => {
   after(async () => {
     // Clean up test users after tests
     // await pool.query('DELETE FROM accounts WHERE email = ?', ['test1@example.com']);
+    // await pool.query('DELETE FROM courses WHERE course_code = ?', ['CS999']);
   });
 
   it('should login successfully with valid credentials', (done) => {
@@ -23,11 +24,9 @@ describe('Auth API', () => {
       .post('/api/login')
       .send({ email: 'test.student@example.com', password: 'testpassword123' })
       .end((err, res) => {
-        if (err) done(err);
-        console.log('----------------------------');
+        if (err) done(err);       
         console.log(res.body);
         console.log(res.body.userName);
-        console.log('----------------------------');
         expect(res).to.have.status(200);
         expect(res.body).to.be.an('object');
         expect(res.body.success).to.be.true;
@@ -39,26 +38,26 @@ describe('Auth API', () => {
 
   describe('Browse Courses API', () => {
 
-  //   it('should fetch all courses', (done) => { //test to fetch all courses
-  //     request(app)
-  //       .get('/api/courses')  //send a GET request to the /api/courses endpoint
-  //       .query({ code: "CS109" })
-  //       .end((err, res) => { //function to handle response
-  //         if (err) done(err); //if err occurs, end test
-  //         console.log('----------------------------');
-  //         console.log(res.body); 
-  //         console.log('----------------------------');
-  //         expect(res).to.have.status(200); // status should be 200 OK
-  //         expect(res.body).to.be.an('array'); //response should be an array of courses
-  //         done();
-  //       });
-  //   });
+    it('should fetch all courses', (done) => { //test to fetch all courses
+      request(app)
+        .get('/api/courses')  //send a GET request to the /api/courses endpoint
+        .query({ code: "CS109" })
+        .end((err, res) => { //function to handle response
+          if (err) done(err); //if err occurs, end test
+          console.log('----------------------------');
+          console.log(res.body); 
+          console.log('----------------------------');
+          expect(res).to.have.status(200); // status should be 200 OK
+          expect(res.body).to.be.an('array'); //response should be an array of courses
+          done();
+        });
+    });
 
     //to verify if api retrives correct details for a specific course
     it('should fetch course details by course code', (done) => {
       request(app)
-        .get(`/api/courses/CS109`) //GET request to api/courses/CS101
-        // .query({ code: 'CS109' })
+        .get(`/api/courses/CS109`) //GET request to api/courses/CS101    
+        // .query({ code: 'CS109' })   
         .end((err, res) => { 
           if (err) done(err);
           console.log('----------------------------');
@@ -74,9 +73,8 @@ describe('Auth API', () => {
     
     it('should return 404 for non-existent course code', (done) => {      
       request(app)
-        .get(`/api/courses/CS999`) //GET request to api/courses/CS999
-        // .query({ code: 'CS999' })
-        .query({ code: 'CS999' })
+        .get(`/api/courses/CS999`) //GET request to api/courses/CS999   
+        // .query({ code: 'CS999' })     
         .end((err, res) => {
           if (err) done(err);
           console.log('----------------------------');
