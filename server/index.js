@@ -136,12 +136,6 @@ app.put("/admin/update-grade/:userId", async (req, res) => {
 // Log all routes for debugging
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
-  
-  // Debug route mapping
-  console.log("Registered routes:");
-  console.log(" - /api/account - Get account by email");
-  console.log(" - /api/register-student - Register student for a course");
-  console.log(" - /api/students - Get students by email (deprecated, use /api/account instead)");
 });
 
 export default app;
