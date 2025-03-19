@@ -1,0 +1,14 @@
+.modal-content {
+    width: 80%; /* Increase the width to 80% of the viewport */
+    max-width: 1200px; /* Set a maximum width */
+    margin: auto; /* Center the modal */
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    outline: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .overlay {
+    background-color: rgba(0, 0, 0, 0.5); /* Dim the background */
+  }
