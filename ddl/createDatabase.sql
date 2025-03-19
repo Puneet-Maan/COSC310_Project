@@ -35,7 +35,6 @@ CREATE TABLE sections (
 -- Table: planned_schedules (stores students' planned courses before enrollment)
 CREATE TABLE planned_schedules (
     plan_id INT AUTO_INCREMENT PRIMARY KEY,  -- Unique schedule plan ID
-    student_id INT NOT NULL,                 -- References the student creating the plan
     section_id INT NOT NULL,                 -- Course section added to the plan
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Timestamp for when the plan was made
 );

@@ -11,7 +11,7 @@ import adminRoutes from './routes/adminRoutes.js'; // Import admin routes
 import bodyParser from 'body-parser';
 import waitlistRoute from './routes/waitlist.js'; // Import waitlist route
 import studentRoutes from './routes/student.js'; // Import student routes
-import pullCoursesRoute from './routes/pullCourses.js'; // Import pullCourses route
+import courseRoutes from './routes/courseRoutes.js'; // Import courseRoutes route
 
 // Environmental Variables
 dotenv.config();
@@ -43,7 +43,7 @@ app.use('/api', editAccRoute); // Use edit account route under the /api path
 app.use('/api/admin', adminRoutes); // Add check-admin route under the /api/admin path
 app.use('/api', waitlistRoute);
 app.use('/api', studentRoutes); // Use student routes under the /api path
-app.use('/api', pullCoursesRoute); // Use pullCourses route under the /api path
+app.use('/api', courseRoutes); // Use pullCourses route under the /api path
 
 // Handle OPTIONS requests
 app.options('*', cors());
@@ -133,7 +133,7 @@ app.put("/admin/update-grade/:userId", async (req, res) => {
   }
 });
 
-// Start the server on port 5000
+// Log all routes for debugging
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
