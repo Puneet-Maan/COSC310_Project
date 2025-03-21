@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  server:
+    image: 'server-image'
+    restart: always
+    ports:
+      - "5000:5000"
+    expose:
+      - "5000"  
+    depends_on:
+          - mysql-db 
+    environment:
+      - DB_HOST=host.docker.internal
+    networks:
+      - front-end
+      - back-end
+  
+  client:
+    image: 'client-image'
+    restart: always
+    ports:
+      - "3000:3000"
+    expose:
+      - "3000"  
+    depends_on:
+      - server
+    networks:
+      - front-end
+  mysql-db:
+    image: mysql:latest
+    container_name: nullPointers-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: nullPointersDatabase
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306" 
+    networks:
+      - back-end
+volumes:
+  db_data:
+networks:
+  front-end:
+  back-end:
+
