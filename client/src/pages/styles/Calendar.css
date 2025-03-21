@@ -1,0 +1,160 @@
+/* General Styles */
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding-top: 60px;
+  background: linear-gradient(135deg, #00111d 20%, #000000 50%, #00121f 80%);
+  background-size: 500% 500%;
+  animation: moveBackground 15s ease infinite;
+}
+
+/* Background animation */
+@keyframes moveBackground {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Calendar Container */
+.calendar-container {
+  width: 80%;
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 30px;
+  border-radius: 12px;
+  background-color: rgba(0, 0, 0, 0.7);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+/* Header */
+h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+/* Calendar Table */
+.calendar-table {
+  width: auto;
+  margin-top: 3px;
+  padding: 0 10px;
+  overflow-x: auto;
+  table-layout: auto;
+
+}
+
+.calendar-table th,
+.calendar-table td {
+  padding: 12px 20px;
+  text-align: left;
+  
+  border: 2px solid rgba(0, 0, 0, 0.8); /* A dark green-blue tone */
+  border-radius: 6px; /* Adds soft rounded corners */
+  box-shadow: 0 2px 4px rgb(0, 185, 86); /* A very light shadow for a subtle 3D effect */
+    word-wrap: break-word;
+  white-space: normal;
+}
+
+.calendar-table th {
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #e0e0e0;
+}
+
+.calendar-table td {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #e0e0e0;
+}
+
+.calendar-table tr:hover {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.calendar-table tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Calendar Cell */
+.calendar-cell {
+  height: 8px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+/* Event Block */
+.event {
+  background-color: #4caf50;
+  border: 1px solid #2c6f2f;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+  height: 100%;
+  box-sizing: border-box;
+  font-size: 12px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: transform 0.2s ease, box-shadow 0.3s ease-in-out;
+}
+
+.event:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+.event:hover::after {
+  content: attr(data-info);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 12px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* Time Slot */
+.time-slot {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #cbd5e0;
+}
+
+.time-slot:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Scrollable Table */
+.table-container {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+/* Responsive Table */
+@media (max-width: 768px) {
+  .calendar-container {
+    width: 90%;
+  }
+
+  .calendar-table th, .calendar-table td {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  .calendar-cell {
+    height: 70px;
+  }
+}
