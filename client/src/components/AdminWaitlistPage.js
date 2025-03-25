@@ -15,7 +15,7 @@ const AdminWaitlistPage = () => {
           return;
         }
 
-        const response = await fetch('http://localhost:3000/courses/waitlisted-students', {
+        const response = await fetch('http://localhost:5000/courses/waitlisted-students', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

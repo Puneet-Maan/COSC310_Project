@@ -16,7 +16,7 @@ function StudentHome() {
         const decodedToken = JSON.parse(atob(token.split('.')[1]));
         const userId = decodedToken.id;
 
-        const response = await fetch(`http://localhost:3000/profile/${userId}`, {
+        const response = await fetch(`http://localhost:5000/profile/${userId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

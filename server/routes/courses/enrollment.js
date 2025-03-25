@@ -109,7 +109,6 @@ router.post('/drop', async (req, res) => {
 // Get enrollments with grades for a specific student
 router.get('/student-enrollments/:student_id', async (req, res) => {
   const { student_id } = req.params;
-  //console.log('Received request for student_id:', student_id);
 
   try {
     const [enrollments] = await db.query(
@@ -120,9 +119,8 @@ router.get('/student-enrollments/:student_id', async (req, res) => {
       [student_id]
     );
     
-    // Ensure we're sending a proper JSON response
     res.setHeader('Content-Type', 'application/json');
-    res.json(enrollments || []); // Send empty array if no enrollments found
+    res.json(enrollments || []);
   } catch (err) {
     console.error('Error fetching student enrollments:', err);
     res.status(500).json({ message: 'Server error' });
@@ -134,6 +132,11 @@ router.put('/update-grade', async (req, res) => {
   const { enrollment_id, grade } = req.body;
 
   try {
+    // Validate grade is within acceptable range (0-100)
+    if (grade !== null && (grade < 0 || grade > 100)) {
+      return res.status(400).json({ message: 'Grade must be between 0 and 100' });
+    }
+
     const [result] = await db.query(
       'UPDATE enrollments SET grade = ? WHERE id = ?',
       [grade, enrollment_id]

@@ -88,6 +88,37 @@ const StudentEnrollmentsPage = () => {
     }
   };
 
+  const handleDownloadReport = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.post(
+        'http://localhost:5000/report/generate',
+        { studentName, enrollments },
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          responseType: 'blob',
+        }
+      );
+
+      // Create a blob from the response data
+      const blob = new Blob([response.data], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `enrollment_report_${studentName.replace(/\s+/g, '_')}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (err) {
+      console.error('Error downloading report:', err);
+      alert('Failed to download report. Please try again.');
+    }
+  };
+
   if (loading) return <div className="loading-spinner">Loading...</div>;
   if (error) return <div className="error-message">{error}</div>;
 
@@ -95,9 +126,14 @@ const StudentEnrollmentsPage = () => {
     <div className="admin-course-list-page">
       <div className="page-header">
         <h1 className="page-title">Enrollments for {studentName}</h1>
-        <button className="btn-primary" onClick={() => navigate('/students')}>
-          Back to Students
-        </button>
+        <div className="button-group">
+          <button className="btn-primary" onClick={() => navigate('/students')}>
+            Back to Students
+          </button>
+          <button className="btn-report" onClick={handleDownloadReport}>
+            Download Report
+          </button>
+        </div>
       </div>
 
       <div className="table-container">
@@ -134,3 +170,5 @@ const StudentEnrollmentsPage = () => {
 };
 
 export default StudentEnrollmentsPage;
+
+

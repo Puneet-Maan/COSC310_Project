@@ -7,7 +7,7 @@ function NotificationsPage() {
   useEffect(() => {
     const fetchNotifications = async (studentId) => {
       try {
-        const response = await fetch(`http://localhost:3000/courses/notifications/${studentId}`);
+        const response = await fetch(`http://localhost:5000/courses/notifications/${studentId}`);
         const data = await response.json();
         setNotifications(data);
       } catch (error) {
@@ -33,7 +33,7 @@ function NotificationsPage() {
 
   const handleDeleteNotification = async (notificationId) => {
     try {
-      const response = await fetch(`http://localhost:3000/courses/notifications/${notificationId}`, {
+      const response = await fetch(`http://localhost:5000/courses/notifications/${notificationId}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
       });

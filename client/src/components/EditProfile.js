@@ -29,7 +29,7 @@ function EditProfile() {
         const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode the token
         const studentId = decodedToken.id;
 
-        const response = await fetch(`http://localhost:3000/profile/${studentId}`, {
+        const response = await fetch(`http://localhost:5000/profile/${studentId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ function EditProfile() {
       const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode the token
       const studentId = decodedToken.id;
 
-      const response = await fetch(`http://localhost:3000/profile/${studentId}`, {
+      const response = await fetch(`http://localhost:5000/profile/${studentId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
