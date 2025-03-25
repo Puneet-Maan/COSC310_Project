@@ -24,6 +24,7 @@ app.use('/courses', courseEnrollmentRoutes);
 app.use('/courses', courseWaitlistRoutes);
 app.use('/calendar', calendarRoutes);
 app.use('/admin', adminRoutes);
+app.use('/enrollments', courseEnrollmentRoutes); // Register only once
 
 // Start the server
 app.listen(3000, () => console.log('Server is running on port 3000'));
