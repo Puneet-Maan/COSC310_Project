@@ -92,16 +92,16 @@ const StudentEnrollmentsPage = () => {
   if (error) return <div className="error-message">{error}</div>;
 
   return (
-    <div className="student-enrollments-page">
+    <div className="admin-course-list-page">
       <div className="page-header">
-        <h1>Enrollments for {studentName}</h1>
-        <button className="back-button" onClick={() => navigate('/students')}>
+        <h1 className="page-title">Enrollments for {studentName}</h1>
+        <button className="btn-primary" onClick={() => navigate('/students')}>
           Back to Students
         </button>
       </div>
 
-      <div className="enrollments-table-container">
-        <table className="enrollments-table">
+      <div className="table-container">
+        <table className="students-table">
           <thead>
             <tr>
               <th>Course Name</th>
@@ -118,7 +118,7 @@ const StudentEnrollmentsPage = () => {
                 <td>{enrollment.grade || 'N/A'}</td>
                 <td>
                   <button
-                    className="edit-grade-button"
+                    className="edit-button"
                     onClick={() => handleUpdateGrade(enrollment.enrollment_id, enrollment.grade)}
                   >
                     Update Grade
