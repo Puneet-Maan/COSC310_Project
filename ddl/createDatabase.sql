@@ -83,6 +83,7 @@ CREATE TABLE enrollments (
     id INT AUTO_INCREMENT PRIMARY KEY,
     student_id INT NOT NULL,
     course_id INT NOT NULL,
+    grade INT CHECK (grade >= 0 AND grade <= 100),
     FOREIGN KEY (student_id) REFERENCES users(id),
     FOREIGN KEY (course_id) REFERENCES courses(id),
     UNIQUE (student_id, course_id)

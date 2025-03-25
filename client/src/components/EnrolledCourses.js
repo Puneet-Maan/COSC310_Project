@@ -69,9 +69,49 @@ function EnrolledCourses() {
     }
   };
 
+  const handlePrintReport = async () => {
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setMessage('You are not logged in.');
+            return;
+        }
+
+        // Decode the token to get the student ID
+        const decodedToken = JSON.parse(atob(token.split('.')[1]));
+        const studentId = decodedToken.id;
+
+        const response = await fetch(`http://localhost:5000/report/self-generate/${studentId}`, {
+            method: 'POST'
+        });
+
+        if (response.ok) {
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'enrollment_report.txt';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        } else {
+            setMessage('Failed to generate report. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error generating report:', error);
+        setMessage('An error occurred while generating the report.');
+    }
+};
+
   return (
     <div className="admin-course-list-page">
       <h1 className="page-title">My Enrolled Courses</h1>
+
+      {/* Add Print Report Button */}
+      <button className="btn-report" onClick={handlePrintReport}>
+        Print Enrollment Report
+      </button>
 
       {/* Message Display */}
       {message && <div className="error-message">{message}</div>}

@@ -10,6 +10,7 @@ const courseWaitlistRoutes = require('./routes/courses/waitlist'); // Updated pa
 const calendarRoutes = require('./routes/calendar');
 const adminRoutes = require('./routes/admin');
 const printReport = require('./routes/printReport'); // Updated path
+
 // Enable CORS for all origins
 app.use(cors());
 
