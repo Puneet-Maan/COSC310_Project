@@ -256,6 +256,21 @@ body {
     background-color: #374e80;
 }
 
+.btn-reportself {
+    padding: 10px 20px;
+    background-color: #4c6baf;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: 10px;  /* Adds space between this and elements to the left */
+}
+
+.btn-reportself:hover {
+    background-color: #374e80;
+}
+
 /* Login Card and Form Styles */
 .login-container {
     display: flex;

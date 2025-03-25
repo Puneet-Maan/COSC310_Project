@@ -109,7 +109,7 @@ function EnrolledCourses() {
       <h1 className="page-title">My Enrolled Courses</h1>
 
       {/* Add Print Report Button */}
-      <button className="btn-report" onClick={handlePrintReport}>
+      <button className="btn-reportself" onClick={handlePrintReport}>
         Print Enrollment Report
       </button>
 
