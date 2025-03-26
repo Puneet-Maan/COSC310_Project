@@ -157,6 +157,18 @@ body {
 .delete-button:hover {
     background-color: #d32f2f;
 }
+.view-enrollments-button{
+    padding: 6px 12px;
+    margin: 5px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: #4caf50; 
+}
+
+.view-enrollments-button:hover {
+    background-color: #2f6d33;
+}
 
 /* Modal */
 .modal {

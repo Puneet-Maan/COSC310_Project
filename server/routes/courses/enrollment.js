@@ -109,7 +109,7 @@ router.post('/drop', async (req, res) => {
 // Get enrollments with grades for a specific student
 router.get('/student-enrollments/:student_id', async (req, res) => {
   const { student_id } = req.params;
-  console.log('Received request for student_id:', student_id);
+  //console.log('Received request for student_id:', student_id);
 
   try {
     const [enrollments] = await db.query(

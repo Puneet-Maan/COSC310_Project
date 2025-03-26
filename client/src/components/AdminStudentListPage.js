@@ -204,17 +204,17 @@ const AdminStudentListPage = () => {
                 <td>{student.age}</td>
                 <td>{student.major}</td>
                 <td className="action-buttons">
+                <button 
+                    className="view-enrollments-button" 
+                    onClick={() => viewEnrollments(student.id)}
+                  >
+                    View Enrollments
+                  </button>
                   <button className="edit-button" onClick={() => handleEdit(student)}>
                     Edit
                   </button>
                   <button className="delete-button" onClick={() => handleDelete(student.id)}>
                     Delete
-                  </button>
-                  <button 
-                    className="view-enrollments-button" 
-                    onClick={() => viewEnrollments(student.id)}
-                  >
-                    View Enrollments
                   </button>
                 </td>
               </tr>
