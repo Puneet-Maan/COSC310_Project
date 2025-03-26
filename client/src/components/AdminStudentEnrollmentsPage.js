@@ -96,6 +96,7 @@ const StudentEnrollmentsPage = () => {
       <div className="page-header">
         <h1 className="page-title">Enrollments for {studentName}</h1>
         <button className="btn-primary" onClick={() => navigate('/students')}>
+
           Back to Students
         </button>
       </div>
