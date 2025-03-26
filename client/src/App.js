@@ -13,7 +13,7 @@ import AdminStudentListPage from './components/AdminStudentListPage';
 import AdminCourseListPage from './components/AdminCourseListPage';
 import AdminWaitlistPage from './components/AdminWaitlistPage';
 import AdminStudentProfilePage from './components/AdminStudentProfilePage';
-import StudentEnrollmentsPage from './components/StudentEnrollmentsPage';
+import StudentEnrollmentsPage from './components/AdminStudentEnrollmentsPage';
 
 // Import the global CSS file
 import './styles/globalStyles.css'; // Ensure the correct path to your CSS file
