@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import '../styles/globalStyles.css'; // Import the global styles
 
 const AdminStudentListPage = () => {
+  const navigate = useNavigate();
   const [students, setStudents] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -11,6 +13,7 @@ const AdminStudentListPage = () => {
   const [modalType, setModalType] = useState('');
   const [currentStudent, setCurrentStudent] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [enrollments, setEnrollments] = useState([]);
 
   // Fetch Students
   useEffect(() => {
@@ -144,6 +147,11 @@ const AdminStudentListPage = () => {
     }
   };
 
+  // Replace fetchEnrollments with navigation
+  const viewEnrollments = (studentId) => {
+    navigate(`/admin/students/${studentId}/enrollments`);
+  };
+
   if (loading) {
     return <div className="loading-spinner">Loading students...</div>;
   }
@@ -201,6 +209,12 @@ const AdminStudentListPage = () => {
                   </button>
                   <button className="delete-button" onClick={() => handleDelete(student.id)}>
                     Delete
+                  </button>
+                  <button 
+                    className="view-enrollments-button" 
+                    onClick={() => viewEnrollments(student.id)}
+                  >
+                    View Enrollments
                   </button>
                 </td>
               </tr>

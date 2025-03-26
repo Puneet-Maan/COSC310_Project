@@ -106,5 +106,48 @@ router.post('/drop', async (req, res) => {
   }
 });
 
+// Get enrollments with grades for a specific student
+router.get('/student-enrollments/:student_id', async (req, res) => {
+  const { student_id } = req.params;
+  console.log('Received request for student_id:', student_id);
+
+  try {
+    const [enrollments] = await db.query(
+      `SELECT e.id AS enrollment_id, c.name AS course_name, c.code AS course_code, e.grade
+       FROM enrollments e
+       JOIN courses c ON e.course_id = c.id
+       WHERE e.student_id = ?`,
+      [student_id]
+    );
+    
+    // Ensure we're sending a proper JSON response
+    res.setHeader('Content-Type', 'application/json');
+    res.json(enrollments || []); // Send empty array if no enrollments found
+  } catch (err) {
+    console.error('Error fetching student enrollments:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Update grade for a specific enrollment
+router.put('/update-grade', async (req, res) => {
+  const { enrollment_id, grade } = req.body;
+
+  try {
+    const [result] = await db.query(
+      'UPDATE enrollments SET grade = ? WHERE id = ?',
+      [grade, enrollment_id]
+    );
+
+    if (result.affectedRows > 0) {
+      res.json({ message: 'Grade updated successfully' });
+    } else {
+      res.status(404).json({ message: 'Enrollment not found' });
+    }
+  } catch (err) {
+    console.error('Error updating grade:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
 module.exports = router;
