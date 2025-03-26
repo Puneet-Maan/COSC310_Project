@@ -13,7 +13,7 @@ import AdminStudentListPage from './components/AdminStudentListPage';
 import AdminCourseListPage from './components/AdminCourseListPage';
 import AdminWaitlistPage from './components/AdminWaitlistPage';
 import AdminStudentProfilePage from './components/AdminStudentProfilePage';
-import StudentEnrollmentsPage from './components/StudentEnrollmentsPage';
+import AdminStudentEnrollmentsPage from './components/AdminStudentEnrollmentsPage';
 
 // Import the global CSS file
 import './styles/globalStyles.css'; // Ensure the correct path to your CSS file
@@ -93,7 +93,7 @@ function App() {
         <Route path="/course-list" element={<AdminCourseListPage theme={theme} />} />
         <Route path="/waitlist" element={<AdminWaitlistPage theme={theme} />} />
         <Route path="/students/:studentId" element={<AdminStudentProfilePage theme={theme} />} />
-        <Route path="/admin/students/:studentId/enrollments" element={<StudentEnrollmentsPage />} />
+        <Route path="/admin/students/:studentId/enrollments" element={<AdminStudentEnrollmentsPage />} />
       </Routes>
     </>
   );
