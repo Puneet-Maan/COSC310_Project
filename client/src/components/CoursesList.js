@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-// CourseItem.js
+// CourseItem component
 function CourseItem({
   course,
   enrolledCourses,
@@ -28,11 +28,17 @@ function CourseItem({
             Remove from Waitlist
           </button>
         ) : course.enrolled >= course.capacity ? (
-          <button className="join-waitlist" onClick={() => handleEnroll(course.id)}>
+          <button
+            className="join-waitlist"
+            onClick={() => handleEnroll(course.id)}
+          >
             Join Waitlist
           </button>
-        ) : ( 
-          <button className="btn-primary" onClick={() => handleEnroll(course.id)}>
+        ) : (
+          <button
+            className="btn-primary"
+            onClick={() => handleEnroll(course.id)}
+          >
             Enroll
           </button>
         )}
@@ -41,154 +47,101 @@ function CourseItem({
   );
 }
 
-// Main CoursesList Component
 function CoursesList() {
   const [courses, setCourses] = useState([]);
-  const [enrolledCourses, setEnrolledCourses] = useState([]); // Tracks IDs of enrolled courses
-  const [waitlistedCourses, setWaitlistedCourses] = useState([]); // Tracks IDs of waitlisted courses
+  const [enrolledCourses, setEnrolledCourses] = useState([]);
+  const [waitlistedCourses, setWaitlistedCourses] = useState([]);
   const [message, setMessage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
 
+  const fetchCourses = async () => {
+    const response = await fetch('http://localhost:3000/courses');
+    const data = await response.json();
+    setCourses(data);
+  };
+
+  const refreshStudentStatus = async (studentId) => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    // Enrolled
+    const enrolledRes = await fetch(
+      `http://localhost:3000/courses/enrolled-courses/${studentId}`
+    );
+    const enrolledData = await enrolledRes.json();
+    setEnrolledCourses(enrolledData.map((course) => course.id));
+
+    // Waitlisted
+    const waitlistRes = await fetch(
+      `http://localhost:3000/courses/waitlisted-courses/${studentId}`
+    );
+    const waitlistData = await waitlistRes.json();
+    setWaitlistedCourses(waitlistData.map((course) => course.id));
+  };
+
   useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const response = await fetch('http://localhost:3000/courses');
-        const data = await response.json();
-        setCourses(data);
-      } catch (error) {
-        console.error('Error fetching courses:', error);
-        setMessage('Failed to fetch courses. Please try again.');
-      }
-    };
-
-    const fetchEnrolledCourses = async (studentId) => {
-      try {
-        const response = await fetch(`http://localhost:3000/courses/enrolled-courses/${studentId}`);
-        const data = await response.json();
-        setEnrolledCourses(data.map((course) => course.id)); // Extract IDs of enrolled courses
-      } catch (error) {
-        console.error('Error fetching enrolled courses:', error);
-        setMessage('Failed to fetch enrolled courses. Please try again.');
-      }
-    };
-
-    const fetchWaitlistedCourses = async (studentId) => {
-      try {
-        const response = await fetch(`http://localhost:3000/courses/waitlisted-courses/${studentId}`);
-        const data = await response.json();
-        setWaitlistedCourses(data.map((course) => course.id)); // Extract IDs of waitlisted courses
-      } catch (error) {
-        console.error('Error fetching waitlisted courses:', error);
-        setMessage('Failed to fetch waitlisted courses. Please try again.');
-      }
-    };
-
-    // Get the JWT token from localStorage
     const token = localStorage.getItem('token');
     if (!token) {
       setMessage('You are not logged in.');
       return;
     }
 
-    // Decode the token to get the student ID
-    const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode the token to extract the payload
-    const studentId = decodedToken.id; // Get the user ID from the decoded token
+    const decoded = JSON.parse(atob(token.split('.')[1]));
+    const studentId = decoded.id;
 
-    // Fetch data for the logged-in student
     fetchCourses();
-    fetchEnrolledCourses(studentId);
-    fetchWaitlistedCourses(studentId);
+    refreshStudentStatus(studentId);
   }, []);
 
-  // Handle enrollment or adding to waitlist
   const handleEnroll = async (courseId) => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setMessage('You are not logged in.');
-        return;
-      }
+    const token = localStorage.getItem('token');
+    const decoded = JSON.parse(atob(token.split('.')[1]));
+    const studentId = decoded.id;
 
-      // Decode the token to get the student ID
-      const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode the token to extract the payload
-      const studentId = decodedToken.id; // Get the user ID from the decoded token
+    const response = await fetch('http://localhost:3000/courses/enroll', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ student_id: studentId, course_id: courseId }),
+    });
 
-      const response = await fetch('http://localhost:3000/courses/enroll', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ student_id: studentId, course_id: courseId }),
-      });
+    const data = await response.json();
+    setMessage(data.message);
 
-      const data = await response.json();
-      setMessage(data.message);
-
-      if (response.ok) {
-        // If successfully enrolled, update enrolled courses
-        if (!data.waitlisted) {
-          setEnrolledCourses((prev) => [...prev, courseId]); // Add the course ID to enrolledCourses
-        } else {
-          // If added to the waitlist, update waitlisted courses
-          setWaitlistedCourses((prev) => [...prev, courseId]);
-        }
-
-        // Refetch courses to reflect the updated seats
-        const updatedCoursesResponse = await fetch('http://localhost:3000/courses');
-        const updatedCourses = await updatedCoursesResponse.json();
-        setCourses(updatedCourses);
-      }
-    } catch (error) {
-      console.error('Error enrolling in course:', error);
-      setMessage('An error occurred. Please try again.');
+    if (response.ok) {
+      await fetchCourses();
+      await refreshStudentStatus(studentId);
     }
   };
 
-  // Handle removing from waitlist
   const handleRemoveFromWaitlist = async (courseId) => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setMessage('You are not logged in.');
-        return;
-      }
+    const token = localStorage.getItem('token');
+    const decoded = JSON.parse(atob(token.split('.')[1]));
+    const studentId = decoded.id;
 
-      // Decode the token to get the student ID
-      const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode the token to extract the payload
-      const studentId = decodedToken.id; // Get the user ID from the decoded token
-
-      const response = await fetch('http://localhost:3000/courses/remove-waitlist', {
+    const response = await fetch(
+      'http://localhost:3000/courses/remove-waitlist',
+      {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ student_id: studentId, course_id: courseId }),
-      });
-
-      const data = await response.json();
-      setMessage(data.message);
-
-      if (response.ok) {
-        // Update waitlisted courses
-        setWaitlistedCourses((prev) => prev.filter((id) => id !== courseId));
-
-        // Refetch courses to reflect the updated seats
-        const updatedCoursesResponse = await fetch('http://localhost:3000/courses');
-        const updatedCourses = await updatedCoursesResponse.json();
-        setCourses(updatedCourses);
       }
-    } catch (error) {
-      console.error('Error removing from waitlist:', error);
-      setMessage('An error occurred. Please try again.');
+    );
+
+    const data = await response.json();
+    setMessage(data.message);
+
+    if (response.ok) {
+      await fetchCourses();
+      await refreshStudentStatus(studentId);
     }
   };
 
   return (
     <div className="admin-course-list-page">
-      
       <h1 className="page-title">Course List</h1>
 
-            {/* Message Display */}
-            {message && <div className="error-message">{message}</div>}
-      
+      {message && <div className="error-message">{message}</div>}
 
-      {/* Search Bar Section */}
       <div className="search-container">
         <input
           type="text"
@@ -199,59 +152,54 @@ function CoursesList() {
         />
       </div>
 
-
-
-{/* Waitlist Section */}
-<div className="table-container">
-  <h2>Your Waitlisted Courses</h2>
-  {waitlistedCourses.length > 0 ? (
-    <table className="students-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Course Name</th>
-          <th>Instructor</th>
-          <th>Schedule</th>
-          <th>Seats Left</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {waitlistedCourses.map((courseId) => {
-          const course = courses.find((c) => c.id === courseId);
-          return (
-            <tr key={courseId}>
-              <td>{course ? course.id : 'N/A'}</td>
-              <td>{course ? course.name : 'Course not found'}</td>
-              <td>{course ? course.instructor : 'Instructor not available'}</td>
-              <td>{course ? course.schedule : 'Schedule not available'}</td>
-              <td>{course ? course.capacity - course.enrolled : 'N/A'} seats left</td>
-              <td>
-                <button
-                  className="cancel-button"
-                  onClick={() => handleRemoveFromWaitlist(courseId)}
-                >
-                  Remove from Waitlist
-                </button>
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
-  ) : (
-    <p>You are not waitlisted for any courses.</p>
-  )}
-</div>
-
-
-
-      {/* Courses Table Section */}
       <div className="table-container">
-      <h2>All Courses</h2>
+        <h2>Your Waitlisted Courses</h2>
+        {waitlistedCourses.length > 0 ? (
+          <table className="students-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Course Name</th>
+                <th>Instructor</th>
+                <th>Schedule</th>
+                <th>Seats Left</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {waitlistedCourses.map((courseId) => {
+                const course = courses.find((c) => c.id === courseId);
+                return (
+                  <tr key={courseId}>
+                    <td>{course?.id || 'N/A'}</td>
+                    <td>{course?.name || 'Course not found'}</td>
+                    <td>{course?.instructor || 'N/A'}</td>
+                    <td>{course?.schedule || 'N/A'}</td>
+                    <td>
+                      {course ? course.capacity - course.enrolled : 'N/A'} seats
+                      left
+                    </td>
+                    <td>
+                      <button
+                        className="cancel-button"
+                        onClick={() => handleRemoveFromWaitlist(courseId)}
+                      >
+                        Remove from Waitlist
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        ) : (
+          <p>You are not waitlisted for any courses.</p>
+        )}
+      </div>
 
+      <div className="table-container">
+        <h2>All Courses</h2>
         <table className="students-table">
-          
           <thead>
             <tr>
               <th>ID</th>
@@ -280,8 +228,6 @@ function CoursesList() {
           </tbody>
         </table>
       </div>
-
-
     </div>
   );
 }
