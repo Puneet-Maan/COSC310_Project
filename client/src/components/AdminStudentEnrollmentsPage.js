@@ -24,13 +24,13 @@ const StudentEnrollmentsPage = () => {
         console.log('Fetching data for student:', studentId);
 
         const [enrollmentsResponse, studentResponse] = await Promise.all([
-          axios.get(`http://localhost:5000/enrollments/student-enrollments/${studentId}`, {
+          axios.get(`http://localhost:3000/enrollments/student-enrollments/${studentId}`, {
             headers: { 
               'Authorization': `Bearer ${token}`,
               'Accept': 'application/json'
             },
           }),
-          axios.get(`http://localhost:5000/admin/students/${studentId}`, {
+          axios.get(`http://localhost:3000/admin/students/${studentId}`, {
             headers: { 
               'Authorization': `Bearer ${token}`,
               'Accept': 'application/json'
@@ -70,7 +70,7 @@ const StudentEnrollmentsPage = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        'http://localhost:5000/enrollments/update-grade',
+        'http://localhost:3000/enrollments/update-grade',
         { enrollment_id: enrollmentId, grade: newGrade },
         { headers: { Authorization: `Bearer ${token}` } }
       );
