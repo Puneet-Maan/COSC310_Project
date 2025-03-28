@@ -81,7 +81,7 @@ function EnrolledCourses() {
         const decodedToken = JSON.parse(atob(token.split('.')[1]));
         const studentId = decodedToken.id;
 
-        const response = await fetch(`http://localhost:5000/report/self-generate/${studentId}`, {
+        const response = await fetch(`http://localhost:3000/report/self-generate/${studentId}`, {
             method: 'POST'
         });
 

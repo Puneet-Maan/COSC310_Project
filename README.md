@@ -51,7 +51,7 @@
    - Once inside the MySQL shell, switch to the database:
 
      ```sql
-     USE nullPointersDatabase;
+     USE studentPortal;
      ```
 
    - Open the `createDatabase.sql` file located in the `ddl` folder (in the root of the repository) and copy its contents. Paste the SQL commands into the MySQL shell to create the necessary tables.
