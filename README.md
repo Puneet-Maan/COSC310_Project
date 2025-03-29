@@ -1,4 +1,7 @@
-![title](https://github.com/user-attachments/assets/77607944-b3bb-4813-8c70-43efa5d501f2)
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/77607944-b3bb-4813-8c70-43efa5d501f2" alt="title">
+</div>
+
 #### Created by Tolu Akinwande, Harper Kerstens, Puneet Maan, Mika Panagsagan, and Jeel Patel
 ### Student Perspective
 https://github.com/user-attachments/assets/81bb1362-4be1-41dd-930e-d2d3c733ea56
@@ -85,6 +88,7 @@ https://github.com/user-attachments/assets/beabf4cc-eea9-4f51-98b0-36c6211230fc
 
 Currently all tests are up to date and passing successfully.
 
+#### How to run tests
 1. Open a terminal in the `server` folder. Ensure the backend server is **not running**, as tests will fail otherwise:
 
    ```bash
