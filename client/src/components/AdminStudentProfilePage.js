@@ -5,148 +5,108 @@ import '../styles/globalStyles.css';
 function AdminStudentProfilePage() {
   const { studentId } = useParams();
   const [student, setStudent] = useState(null);
-  const [error, setError] = useState('');
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [waitlistedCourses, setWaitlistedCourses] = useState([]);
   const [newCourseId, setNewCourseId] = useState('');
   const [editingStudent, setEditingStudent] = useState(false);
   const [updatedStudent, setUpdatedStudent] = useState({});
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
 
+  // Helper function for API calls
+  const apiCall = async (url, method = 'GET', body = null) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setError('You are not logged in.');
+        return null;
+      }
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: body ? JSON.stringify(body) : null,
+      });
+
+      if (!response.ok) {
+        setError('Failed to complete the request. Please try again later.');
+        return null;
+      }
+
+      return await response.json();
+    } catch (err) {
+      console.error('API call error:', err);
+      setError('Network error. Please check your connection.');
+      return null;
+    }
+  };
+
+  // Fetch student profile on component mount
   useEffect(() => {
     const fetchStudentProfile = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          setError('You are not logged in.');
-          return;
-        }
-
-        const response = await fetch(`http://localhost:3000/courses/students/${studentId}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setStudent(data.student);
-          setEnrolledCourses(data.enrolledCourses);
-          setWaitlistedCourses(data.waitlistedCourses);
-        } else {
-          setError('Failed to fetch student profile. Please try again later.');
-        }
-      } catch (error) {
-        console.error('Error fetching student profile:', error);
-        setError('Network error. Please check your connection.');
+      const data = await apiCall(`http://localhost:3000/courses/students/${studentId}`);
+      if (data) {
+        setStudent(data.student);
+        setEnrolledCourses(data.enrolledCourses);
+        setWaitlistedCourses(data.waitlistedCourses);
+        setError('');
       }
+      setLoading(false);
     };
 
     fetchStudentProfile();
   }, [studentId]);
 
+  // Handle input changes for editing student info
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUpdatedStudent({ ...updatedStudent, [name]: value });
   };
 
+  // Save updated student info
   const saveStudentInfo = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setError('You are not logged in.');
-        return;
-      }
-
-      const response = await fetch(`http://localhost:3000/students/${studentId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(updatedStudent),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setStudent(data);
-        setEditingStudent(false);
-        setError('');
-      } else {
-        setError('Failed to save student information. Please try again later.');
-      }
-    } catch (error) {
-      console.error('Error saving student information:', error);
-      setError('Network error. Please check your connection.');
+    const data = await apiCall(`http://localhost:3000/students/${studentId}`, 'PUT', updatedStudent);
+    if (data) {
+      setStudent(data);
+      setEditingStudent(false);
+      setError('');
     }
   };
 
+  // Add a course for the student
   const addCourse = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setError('You are not logged in.');
-        return;
-      }
-
-      const response = await fetch(`http://localhost:3000/courses/enroll`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({ student_id: studentId, course_id: newCourseId }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setEnrolledCourses([...enrolledCourses, data]);
-        setError('');
-      } else {
-        setError('Failed to add course. Please try again later.');
-      }
-    } catch (error) {
-      console.error('Error adding course:', error);
-      setError('Network error. Please check your connection.');
+    const data = await apiCall(`http://localhost:3000/courses/enroll`, 'POST', {
+      student_id: studentId,
+      course_id: newCourseId,
+    });
+    if (data) {
+      setEnrolledCourses([...enrolledCourses, data]);
+      setNewCourseId('');
+      setError('');
     }
   };
 
+  // Drop a course for the student
   const dropCourse = async (courseId) => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setError('You are not logged in.');
-        return;
-      }
-
-      const response = await fetch(`http://localhost:3000/courses/drop`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({ student_id: studentId, course_id: courseId }),
-      });
-
-      if (response.ok) {
-        setEnrolledCourses(enrolledCourses.filter(course => course.id !== courseId));
-        setError('');
-      } else {
-        setError('Failed to drop course. Please try again later.');
-      }
-    } catch (error) {
-      console.error('Error dropping course:', error);
-      setError('Network error. Please check your connection.');
+    const success = await apiCall(`http://localhost:3000/courses/drop`, 'POST', {
+      student_id: studentId,
+      course_id: courseId,
+    });
+    if (success) {
+      setEnrolledCourses(enrolledCourses.filter(course => course.id !== courseId));
+      setError('');
     }
   };
+
+  if (loading) {
+    return <p>Loading student profile...</p>;
+  }
 
   if (error) {
     return <p className="error-message">{error}</p>;
-  }
-
-  if (!student) {
-    return <p>Loading student profile...</p>;
   }
 
   return (
