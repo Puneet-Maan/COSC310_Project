@@ -25,7 +25,7 @@ const AdminStudentListPage = () => {
           return;
         }
 
-        const response = await fetch('http://localhost:5000/admin/students', {
+        const response = await fetch('http://localhost:3000/admin/students', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ const AdminStudentListPage = () => {
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/admin/students/${id}`, {
+      await axios.delete(`http://localhost:3000/admin/students/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setStudents(students.filter((student) => student.id !== id));
@@ -112,7 +112,7 @@ const AdminStudentListPage = () => {
       let response;
       if (modalType === 'edit') {
         response = await axios.put(
-          `http://localhost:5000/admin/students/${currentStudent.id}`,
+          `http://localhost:3000/admin/students/${currentStudent.id}`,
           currentStudent,
           { headers: { Authorization: `Bearer ${token}` } }
         );

@@ -21,7 +21,7 @@ function AdminStudentProfilePage() {
           return;
         }
 
-        const response = await fetch(`http://localhost:5000/courses/students/${studentId}`, {
+        const response = await fetch(`http://localhost:3000/courses/students/${studentId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ function AdminStudentProfilePage() {
         return;
       }
 
-      const response = await fetch(`http://localhost:5000/students/${studentId}`, {
+      const response = await fetch(`http://localhost:3000/students/${studentId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -90,7 +90,7 @@ function AdminStudentProfilePage() {
         return;
       }
 
-      const response = await fetch(`http://localhost:5000/courses/enroll`, {
+      const response = await fetch(`http://localhost:3000/courses/enroll`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -120,7 +120,7 @@ function AdminStudentProfilePage() {
         return;
       }
 
-      const response = await fetch(`http://localhost:5000/courses/drop`, {
+      const response = await fetch(`http://localhost:3000/courses/drop`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
