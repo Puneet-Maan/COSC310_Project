@@ -13,7 +13,8 @@ function StudentHome() {
           return;
         }
 
-        const response = await fetch(`http://localhost:3000/profile`, {
+
+        const response = await fetch(`http://localhost:3000/profile/${userId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

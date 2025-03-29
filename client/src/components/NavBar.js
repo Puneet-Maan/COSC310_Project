@@ -17,7 +17,7 @@ function NavBar({ isLoggedIn, handleLogout, notificationCount }) {
 
         // Fetch user data from the '/profile/:id' endpoint
         const fetchUserData = async () => {
-          const response = await fetch(`http://localhost:3000/profile/${userId}`, {
+          const response = await fetch(`http://localhost:5000/profile/${userId}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',

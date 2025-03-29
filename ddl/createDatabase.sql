@@ -1,80 +1,144 @@
--- Create the database (optional, depending on your setup)
-CREATE DATABASE IF NOT EXISTS nullPointersDatabase;
-USE nullPointersDatabase;
-
--- Table: accounts (stores user information for students and admins)
-CREATE TABLE accounts (
-    user_id INT AUTO_INCREMENT PRIMARY KEY,  -- Unique ID for each user
-    name VARCHAR(100) NOT NULL,              -- Full name of the user
-    email VARCHAR(255) UNIQUE NOT NULL,      -- Email (used for login/contact)
-    phone VARCHAR(20) NULL,                  -- Contact number (optional)
-    role ENUM('student', 'admin') NOT NULL,  -- Defines if user is a student or admin
-    password VARCHAR(255) NOT NULL           -- Hashed password for security
-);
-
--- Table: courses (stores general course details)
-CREATE TABLE courses (
-    course_id INT AUTO_INCREMENT PRIMARY KEY, -- Unique ID for each course
-    course_code VARCHAR(20) UNIQUE NOT NULL,  -- Short course identifier (e.g., "CS101")
-    course_name VARCHAR(100) NOT NULL,        -- Full name of the course (e.g., "Introduction to Programming")
-    department VARCHAR(50) NOT NULL,          -- Department offering the course (e.g., "Computer Science")
-    credits INT NOT NULL,                     -- Number of credit hours
-    requires_lab BOOLEAN DEFAULT FALSE        -- Indicates if the course requires a lab
-);
-
--- Table: sections (stores different class sections of a course)
-CREATE TABLE sections (
-    section_id INT AUTO_INCREMENT PRIMARY KEY,   -- Unique section identifier
-    course_id INT NOT NULL,                      -- References the course it belongs to
-    section_number VARCHAR(10) NOT NULL,         -- Section number (e.g., "A01", "B02")
-    instructor VARCHAR(100) NOT NULL,            -- Instructor's name
-    schedule VARCHAR(255) NOT NULL,              -- Class schedule (e.g., "Mon/Wed 10-11 AM")
-    room VARCHAR(50) NULL,                       -- Classroom location
-);
-
--- Table: planned_schedules (stores students' planned courses before enrollment)
-CREATE TABLE planned_schedules (
-    plan_id INT AUTO_INCREMENT PRIMARY KEY,  -- Unique schedule plan ID
-    section_id INT NOT NULL,                 -- Course section added to the plan
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Timestamp for when the plan was made
-);
-
--- Table: enrollments (tracks students' courses and grades)
-CREATE TABLE enrollments (
-    enrollment_id INT AUTO_INCREMENT PRIMARY KEY,  -- Unique record ID
-    student_id INT NOT NULL,                       -- References the student (from accounts)
-    section_id INT NOT NULL,                       -- References the course section
-    grade VARCHAR(5) NULL,                         -- Final grade (e.g., "A", "B+", "C")
-
-);
-
--- Table: prerequisites (stores course prerequisite relationships)
-CREATE TABLE prerequisites (
-    course_id INT NOT NULL,       -- The course that requires a prerequisite
-    prereq_course_id INT NOT NULL,-- The required prerequisite course
-    PRIMARY KEY (course_id, prereq_course_id),
-);
-
--- Table: course_lab_sections (stores lab sections for courses that require labs)
-CREATE TABLE course_lab_sections (
-    lab_id INT AUTO_INCREMENT PRIMARY KEY,  -- Unique lab section identifier
-    section_id INT NOT NULL,                -- References the course section
-    lab_schedule VARCHAR(255) NOT NULL,     -- Lab schedule (e.g., "Thu 2-4 PM")
-    lab_room VARCHAR(50) NULL,              -- Lab location
-);
-
-CREATE TABLE courses (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    description TEXT,
-    instructor VARCHAR(255)
-);
+CREATE DATABASE studentPortal;
 
 
 CREATE TABLE users (
+       id INT AUTO_INCREMENT PRIMARY KEY,
+       username VARCHAR(255) NOT NULL,
+       password VARCHAR(255) NOT NULL,
+       role ENUM('student', 'admin') DEFAULT 'student'
+     );
+
+
+CREATE TABLE students (
+       id INT AUTO_INCREMENT PRIMARY KEY,
+       name VARCHAR(255) NOT NULL,
+       email VARCHAR(255) UNIQUE,
+       age INT,
+       major VARCHAR(255),
+       user_id INT,
+       FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+     );
+
+
+CREATE TABLE courses (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    grade DECIMAL(5, 2) DEFAULT NULL
+    description TEXT
 );
+
+
+
+CREATE TABLE enrollments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT,
+    course_id INT,
+    grade INT CHECK (grade >= 0 AND grade <= 100),
+    FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
+);
+
+
+
+INSERT INTO users (username, password, role)
+VALUES
+    ('student1', 'password123', 'student'),
+    ('student2', 'mypassword', 'student'),
+    ('admin1', 'adminpass', 'admin');
+
+INSERT INTO students (name, email, age, major, user_id)
+VALUES
+    ('John Doe', 'johndoe@example.com', 20, 'Computer Science', 1),
+    ('Jane Smith', 'janesmith@example.com', 22, 'Mathematics', 2);
+
+INSERT INTO courses (name, description)
+VALUES
+    ('Introduction to Programming', 'Learn the basics of programming.'),
+    ('Advanced Mathematics', 'Dive deep into mathematical concepts.');
+
+INSERT INTO enrollments (student_id, course_id)
+VALUES
+    (1, 1),
+    (2, 2);
+
+
+ALTER TABLE enrollments DROP FOREIGN KEY enrollments_ibfk_2;
+
+
+DROP TABLE courses;
+
+
+DROP TABLE enrollments;
+
+CREATE TABLE courses (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    code VARCHAR(50) UNIQUE NOT NULL,
+    instructor VARCHAR(255) NOT NULL,
+    schedule VARCHAR(255) NOT NULL,
+    capacity INT NOT NULL,
+    enrolled INT DEFAULT 0
+);
+
+CREATE TABLE enrollments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    course_id INT NOT NULL,
+    grade INT CHECK (grade >= 0 AND grade <= 100),
+    FOREIGN KEY (student_id) REFERENCES users(id),
+    FOREIGN KEY (course_id) REFERENCES courses(id),
+    UNIQUE (student_id, course_id)
+);
+
+CREATE TABLE waitlist (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    course_id INT NOT NULL,
+    position INT NOT NULL,
+    FOREIGN KEY (student_id) REFERENCES users(id),
+    FOREIGN KEY (course_id) REFERENCES courses(id)
+);
+
+CREATE TABLE calendar_events (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    course_id INT NOT NULL,
+    event_date DATE NOT NULL,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    FOREIGN KEY (student_id) REFERENCES users(id),
+    FOREIGN KEY (course_id) REFERENCES courses(id)
+);
+
+
+INSERT INTO courses (name, code, instructor, schedule, capacity, enrolled)
+VALUES ('Testing Course', 'TEST101', 'Dr. Test', 'Mon 10:00 AM - 11:00 AM', 1, 0);
+
+INSERT INTO courses (name, code, instructor, schedule, capacity, enrolled) VALUES
+    ('Introduction to Programming', 'CS101', 'Dr. Alice', 'Mon/Wed/Fri 10:00 AM - 11:30 AM', 30, 0),
+    ('Data Structures', 'CS201', 'Dr. Bob', 'Tue/Thu 1:00 PM - 2:30 PM', 25, 0),
+    ('Machine Learning', 'CS301', 'Dr. Carol', 'Mon/Wed 3:00 PM - 4:30 PM', 20, 0),
+    ('Web Development', 'CS401', 'Dr. Eve', 'Fri 1:00 PM - 4:00 PM', 15, 0), 
+    ('Database Systems', 'CS501', 'Dr. Dave', 'Tue/Thu 10:00 AM - 11:30 AM', 20, 0);
+
+ALTER TABLE users ADD CONSTRAINT UNIQUE (username);
+
+
+
+SET @sql = NULL;
+
+
+
+SELECT GROUP_CONCAT(CONCAT('DESCRIBE ', table_name, ';') SEPARATOR ' ') 
+INTO @sql
+FROM information_schema.tables 
+WHERE table_schema = DATABASE();
+
+CREATE TABLE notifications (
+    id INT NOT NULL AUTO_INCREMENT,
+    student_id INT NOT NULL,
+    message VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    FOREIGN KEY (student_id) REFERENCES students(id)
+);
+

@@ -52,7 +52,7 @@ function CoursesList() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch('http://localhost:3000/courses');
+        const response = await fetch('http://localhost:5000/courses');
         const data = await response.json();
         setCourses(data);
       } catch (error) {
@@ -63,7 +63,7 @@ function CoursesList() {
 
     const fetchEnrolledCourses = async (studentId) => {
       try {
-        const response = await fetch(`http://localhost:3000/courses/enrolled-courses/${studentId}`);
+        const response = await fetch(`http://localhost:5000/courses/enrolled-courses/${studentId}`);
         const data = await response.json();
         setEnrolledCourses(data.map((course) => course.id)); // Extract IDs of enrolled courses
       } catch (error) {
@@ -74,7 +74,7 @@ function CoursesList() {
 
     const fetchWaitlistedCourses = async (studentId) => {
       try {
-        const response = await fetch(`http://localhost:3000/courses/waitlisted-courses/${studentId}`);
+        const response = await fetch(`http://localhost:5000/courses/waitlisted-courses/${studentId}`);
         const data = await response.json();
         setWaitlistedCourses(data.map((course) => course.id)); // Extract IDs of waitlisted courses
       } catch (error) {
@@ -113,7 +113,7 @@ function CoursesList() {
       const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode the token to extract the payload
       const studentId = decodedToken.id; // Get the user ID from the decoded token
 
-      const response = await fetch('http://localhost:3000/courses/enroll', {
+      const response = await fetch('http://localhost:5000/courses/enroll', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ student_id: studentId, course_id: courseId }),
@@ -132,7 +132,7 @@ function CoursesList() {
         }
 
         // Refetch courses to reflect the updated seats
-        const updatedCoursesResponse = await fetch('http://localhost:3000/courses');
+        const updatedCoursesResponse = await fetch('http://localhost:5000/courses');
         const updatedCourses = await updatedCoursesResponse.json();
         setCourses(updatedCourses);
       }
@@ -155,7 +155,7 @@ function CoursesList() {
       const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode the token to extract the payload
       const studentId = decodedToken.id; // Get the user ID from the decoded token
 
-      const response = await fetch('http://localhost:3000/courses/remove-waitlist', {
+      const response = await fetch('http://localhost:5000/courses/remove-waitlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ student_id: studentId, course_id: courseId }),
@@ -169,7 +169,7 @@ function CoursesList() {
         setWaitlistedCourses((prev) => prev.filter((id) => id !== courseId));
 
         // Refetch courses to reflect the updated seats
-        const updatedCoursesResponse = await fetch('http://localhost:3000/courses');
+        const updatedCoursesResponse = await fetch('http://localhost:5000/courses');
         const updatedCourses = await updatedCoursesResponse.json();
         setCourses(updatedCourses);
       }
