@@ -1,8 +1,8 @@
 <div align="center">
   <img src="https://github.com/user-attachments/assets/77607944-b3bb-4813-8c70-43efa5d501f2" alt="title">
+   <p>Created by Tolu Akinwande, Harper Kerstens, Puneet Maan, Mika Panagsagan, and Jeel Patel.</p>
 </div>
 
-#### Created by Tolu Akinwande, Harper Kerstens, Puneet Maan, Mika Panagsagan, and Jeel Patel
 ### Student Perspective
 https://github.com/user-attachments/assets/81bb1362-4be1-41dd-930e-d2d3c733ea56
 
