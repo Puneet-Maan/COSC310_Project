@@ -92,7 +92,7 @@ const StudentEnrollmentsPage = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        'http://localhost:5000/report/generate',
+        'http://localhost:3000/report/generate',
         { studentName, enrollments },
         {
           headers: {

@@ -17,19 +17,23 @@ function NavBar({ isLoggedIn, handleLogout, notificationCount }) {
 
         // Fetch user data from the '/profile/:id' endpoint
         const fetchUserData = async () => {
-          const response = await fetch(`http://localhost:5000/profile/${userId}`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`,
-            },
-          });
+          try {
+            const response = await fetch(`http://localhost:3000/profile/${userId}`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+              },
+            });
 
-          if (response.ok) {
-            const userData = await response.json();
-            setUserName(userData.name || decodedToken.username);  // Use 'name' or fallback to 'username'
-          } else {
-            console.error('Failed to fetch user data');
+            if (response.ok) {
+              const userData = await response.json();
+              setUserName(userData.name || decodedToken.username); // Use 'name' or fallback to 'username'
+            } else {
+              console.error('Failed to fetch user data');
+            }
+          } catch (error) {
+            console.error('Error fetching user data:', error);
           }
         };
 

@@ -19,7 +19,7 @@ function EnrolledCourses() {
         const studentId = decodedToken.id; // Get the user ID from the decoded token
 
         // Fetch the enrolled courses for the logged-in student
-        const response = await fetch(`http://localhost:5000/courses/enrolled-courses/${studentId}`);
+        const response = await fetch(`http://localhost:3000/courses/enrolled-courses/${studentId}`);
         const data = await response.json();
 
         // Check if the response is valid
@@ -51,7 +51,7 @@ function EnrolledCourses() {
       const studentId = decodedToken.id; // Get the user ID from the decoded token
 
       // Send request to drop the course
-      const response = await fetch('http://localhost:5000/courses/drop', {
+      const response = await fetch('http://localhost:3000/courses/drop', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ student_id: studentId, course_id: courseId }),

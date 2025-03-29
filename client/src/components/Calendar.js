@@ -8,7 +8,7 @@ function Calendar() {
   useEffect(() => {
     const fetchEvents = async (studentId) => {
       try {
-        const response = await fetch(`http://localhost:5000/calendar/${studentId}`);
+        const response = await fetch(`http://localhost:3000/calendar/${studentId}`);
         const data = await response.json();
         if (data.message) {
           setMessage(data.message);
