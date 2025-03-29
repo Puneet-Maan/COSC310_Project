@@ -1,63 +1,24 @@
-# University of NullPointers
+![title](https://github.com/user-attachments/assets/77607944-b3bb-4813-8c70-43efa5d501f2)
+#### Created by Tolu Akinwande, Harper Kerstens, Puneet Maan, Mika Panagsagan, and Jeel Patel
+### Student Perspective
+https://github.com/user-attachments/assets/81bb1362-4be1-41dd-930e-d2d3c733ea56
+
+### Admin Perspective
+https://github.com/user-attachments/assets/beabf4cc-eea9-4f51-98b0-36c6211230fc
+
+### Functional Requirements
+ - [x] Administator Login / Logout
+ - [x] Manage Student Profiles
+ - [x] Assign Students to a Course
+ - [x] Generate Student Reports
+ - [x] Search and Filter Students
+ - [x] Create and Manage Courses
+ - [x] Student Login / Logout
+ - [x] Enroll in Courses
+ - [x] View and Update Profile
+ - [x] Waitlist Enrollment
 
 ## How to Run the Project
-
-### Docker Setup for Full Deployment
-1. Clone the repository
-   
-
-2. Build the backend Docker image:
-
-   ```bash
-   cd server
-   docker build -t server-image .
-   ```
-
-3. Build the frontend Docker image:
-
-   ```bash
-   cd client
-   docker build -t client-image .
-   ```
-
-4. Navigate back to the root directory and start the application using Docker Compose:
-
-   ```bash
-   cd ..
-   docker-compose up -d
-   ```
-
-4. Access the application in your browser at:
-
-   [http://localhost:3000/](http://localhost:3000/)
-
-   If the database is not working as expected, follow these steps to manually set it up:
-
-   - Navigate to the `server` folder and start the database container:
-
-     ```bash
-     cd server
-     docker compose up -d
-     ```
-
-   - Access the database container:
-
-     ```bash
-     docker exec -it nullPointers-db mysql -u root -p
-     ```
-
-     - When prompted for a password, enter: `root`.
-
-   - Once inside the MySQL shell, switch to the database:
-
-     ```sql
-     USE studentPortal;
-     ```
-
-   - Open the `createDatabase.sql` file located in the `ddl` folder (in the root of the repository) and copy its contents. Paste the SQL commands into the MySQL shell to create the necessary tables.
-
-   - Next, locate the `baseScript.sh` file in the `server` folder. Copy its contents and execute them in the terminal to populate the database with initial data.
-
 ### Running the Backend
 
 1. Open a terminal and navigate to the `server` folder:
@@ -119,6 +80,10 @@
 5. Follow the manual setup steps described in the "Docker Setup for Full Deployment" section if needed.
 
 ### Running Tests
+
+![tests](https://github.com/user-attachments/assets/414b7ef7-839b-4efa-b4ee-5c67300f4424)
+
+Currently all tests are up to date and passing successfully.
 
 1. Open a terminal in the `server` folder. Ensure the backend server is **not running**, as tests will fail otherwise:
 
