@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { getStudentIdFromToken } from '../utils/auth'; // Create this utility function
 
 function EditProfile() {
   const [profile, setProfile] = useState({ name: '', age: '', major: '' });
@@ -11,14 +10,14 @@ function EditProfile() {
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem('token');
-      const studentId = getStudentIdFromToken(token);
-      if (!studentId) {
+      if (!token) {
         setMessage('You are not logged in.');
+        setLoading(false);
         return;
       }
 
       try {
-        const response = await fetch(`http://localhost:3000/profile/${studentId}`, {
+        const response = await fetch(`http://localhost:3000/profile`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -48,14 +47,13 @@ function EditProfile() {
 
   const handleUpdateProfile = async () => {
     const token = localStorage.getItem('token');
-    const studentId = getStudentIdFromToken(token);
-    if (!studentId) {
+    if (!token) {
       setMessage('You are not logged in.');
       return;
     }
 
     try {
-      const response = await fetch(`http://localhost:3000/profile/${studentId}`, {
+      const response = await fetch(`http://localhost:3000/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
