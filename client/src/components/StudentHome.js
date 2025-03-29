@@ -13,10 +13,8 @@ function StudentHome() {
           return;
         }
 
-        const decodedToken = JSON.parse(atob(token.split('.')[1]));
-        const userId = decodedToken.id;
 
-        const response = await fetch(`http://localhost:5000/profile/${userId}`, {
+        const response = await fetch(`http://localhost:3000/profile`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -49,7 +47,8 @@ function StudentHome() {
         
         {/* Quick Info Layer */}
         <p className="intro-message">
-        Welcome back! Explore the links in the navigation bar above to get started.            </p>
+          Welcome back! Explore the links in the navigation bar above to get started.
+        </p>
 
         {/* Error Message Layer */}
         {error && <div className="error-message">{error}</div>}
