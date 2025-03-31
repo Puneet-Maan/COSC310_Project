@@ -3,22 +3,22 @@ import React, { useState, useEffect } from 'react';
 function EditProfile() {
   const [profile, setProfile] = useState({ name: '', age: '', major: '' });
   const [updatedProfile, setUpdatedProfile] = useState({ name: '', age: '', major: '' });
+  const [grades, setGrades] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setMessage('You are not logged in.');
+      setLoading(false);
+      return;
+    }
+
     const fetchProfile = async () => {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setMessage('You are not logged in.');
-        setLoading(false);
-        return;
-      }
-
-
       try {
-        const response = await fetch(`http://localhost:3000/profile`, {
+        const profileRes = await fetch(`http://localhost:3000/profile`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -26,19 +26,45 @@ function EditProfile() {
           },
         });
 
-        if (!response.ok) throw new Error();
-
-        const data = await response.json();
-        setProfile(data);
-        setUpdatedProfile(data);
-      } catch {
-        setMessage('Failed to load profile data. Please try again.');
+        if (profileRes.ok) {
+          const profileData = await profileRes.json();
+          setProfile(profileData);
+          setUpdatedProfile(profileData);
+        } else {
+          setMessage('Failed to load profile data.');
+        }
+      } catch (error) {
+        console.error('Profile fetch error:', error);
+        setMessage('Network error loading profile.');
       } finally {
         setLoading(false);
       }
     };
 
+    const fetchGrades = async () => {
+      try {
+        const gradesRes = await fetch(`http://localhost:3000/profile/grades`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (gradesRes.ok) {
+          const gradesData = await gradesRes.json();
+          console.log('Grades received from backend:', gradesData); // Debug log
+          setGrades(gradesData);
+        } else {
+          console.warn('Failed to load grades.');
+        }
+      } catch (error) {
+        console.warn('Grades fetch failed:', error);
+      }
+    };
+
     fetchProfile();
+    fetchGrades();
   }, []);
 
   const handleInputChange = (e) => {
@@ -54,7 +80,7 @@ function EditProfile() {
     }
 
     try {
-      const response = await fetch(`http://localhost:3000/profile/${userId}`, {
+      const response = await fetch(`http://localhost:3000/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -88,6 +114,7 @@ function EditProfile() {
       <h1 className="page-title">Profile</h1>
       {message && <div className="error-message">{message}</div>}
 
+      {/* Profile Info */}
       <table className="profile-table">
         <thead>
           <tr><th>Field</th><th>Details</th></tr>
@@ -99,8 +126,33 @@ function EditProfile() {
         </tbody>
       </table>
 
+      {/* Grades Section */}
+      <h2 className="section-title">Course Grades</h2>
+      {Array.isArray(grades) && grades.length > 0 ? (
+        <table className="grades-table">
+          <thead>
+            <tr>
+              <th>Course</th>
+              <th>Grade</th>
+            </tr>
+          </thead>
+          <tbody>
+            {grades.map((g, i) => (
+              <tr key={i}>
+                <td>{g.course_name}</td>
+                <td>{g.grade || 'Not graded yet'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p>No grades available.</p>
+      )}
+
+      {/* Edit Button */}
       <button onClick={openModal} className="btn-primary">Edit Profile</button>
 
+      {/* Modal */}
       {isModalOpen && (
         <div className="modal">
           <div className="modal-form">
