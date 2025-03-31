@@ -9,11 +9,10 @@ function StudentHome() {
       try {
         const token = localStorage.getItem('token');
         if (!token) {
-          setError('You are not logged in.');
-          return;
+          throw new Error('You are not logged in.');
         }
 
-        const response = await fetch(`http://localhost:3000/profile`, {
+        const response = await fetch(`http://localhost:3000/profile/`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -21,15 +20,16 @@ function StudentHome() {
           },
         });
 
-        if (response.ok) {
-          const data = await response.json();
-          setProfile(data);
-        } else {
-          setError('Failed to fetch profile data. Please try again later.');
+        if (!response.ok) {
+          throw new Error('Failed to fetch profile data. Please try again later.');
         }
+
+        const data = await response.json();
+        setProfile(data);
+
       } catch (error) {
         console.error('Error fetching profile:', error);
-        setError('Network error. Please check your connection.');
+        setError(error.message || 'Network error. Please check your connection.');
       }
     };
 

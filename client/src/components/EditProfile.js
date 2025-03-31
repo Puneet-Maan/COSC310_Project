@@ -16,6 +16,7 @@ function EditProfile() {
         return;
       }
 
+
       try {
         const response = await fetch(`http://localhost:3000/profile`, {
           method: 'GET',
@@ -53,7 +54,7 @@ function EditProfile() {
     }
 
     try {
-      const response = await fetch(`http://localhost:3000/profile`, {
+      const response = await fetch(`http://localhost:3000/profile/${userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

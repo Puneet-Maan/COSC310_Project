@@ -76,7 +76,7 @@ const AdminStudentListPage = () => {
       setFilteredStudents(filteredStudents.filter((student) => student.id !== id));
       alert('Student deleted successfully!');
     } catch (err) {
-      console.error('Error deleting student:', err);
+     // console.error('Error deleting student:', err);
       alert('Failed to delete student. Please try again.');
     }
   };
