@@ -62,6 +62,8 @@ https://github.com/user-attachments/assets/beabf4cc-eea9-4f51-98b0-36c6211230fc
    npm start
    ```
 
+   `npm start` will automatically open the application in your default web browser. If it doesn't, you can manually navigate to `http://localhost:3001`. 
+
 ### Running the Database
 
 1. Ensure that the Docker Desktop application is running.
@@ -80,7 +82,18 @@ https://github.com/user-attachments/assets/beabf4cc-eea9-4f51-98b0-36c6211230fc
 
    - When prompted for a password, enter: `root`.
 
-5. Follow the manual setup steps described in the "Docker Setup for Full Deployment" section if needed.
+5. Once in the docker container, create the database:
+
+   ```sql
+   CREATE DATABASE IF NOT EXISTS nullPointersDatabase;
+   ```
+
+6. After creating the database ensure you are using the database before copying the .ddl file into the terminal:
+   
+      ```sql
+      USE nullPointersDatabase;
+      ```
+7. Copy the contents of the `ddl\createDatabase.sql` file and paste it into the terminal to create the tables and populate them with data.
 
 ### Running Tests
 
