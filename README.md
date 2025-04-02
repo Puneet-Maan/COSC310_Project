@@ -114,17 +114,18 @@ https://github.com/user-attachments/assets/e5a63c21-69ed-4ab8-9352-2c357acaba9e
 
   3. Student Login
      You can succesfully create your own account to view from student perspective but if not the following logins work
-     ```  
+     
+        ```bash
        (John Doe)
      Username: student1
      Password: password123
-```
-```
+        
       (Jane Doe)
      Username: student2
      Password: mypassword
-    ```
+     ```
 
+  
 ### Running Tests
 
 ![testsPassing](https://github.com/user-attachments/assets/98b25e93-1c71-4e92-8d36-71393e0bb3b1)
