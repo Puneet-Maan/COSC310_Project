@@ -1,12 +1,30 @@
-// routes/profile.js
 const express = require('express');
+const jwt = require('jsonwebtoken');
 const router = express.Router();
-const { authenticateToken } = require('../middleware/authMiddleware');
-const { getStudentProfile, updateStudentProfile } = require('../services/profileService');
+const db = require('../db');
 
-// GET route to fetch student profile (authenticated user)
-router.get('/', authenticateToken, async (req, res) => {
-  const studentId = req.user.id;
+// Middleware to authenticate JWT tokens
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]; // Extract token from "Bearer <token>"
+
+  if (!token) {
+    return res.status(401).json({ message: 'Access token required' });
+  }
+
+  jwt.verify(token, 'your_jwt_secret', (err, user) => {
+    if (err) {
+      return res.status(403).json({ message: 'Invalid or expired token' });
+    }
+
+    req.user = user; // Attach decoded token payload to the request object
+    next();
+  });
+};
+
+// GET route to fetch student profile
+router.get('/:id', authenticateToken, async (req, res) => {
+  const studentId = req.params.id;
 
   try {
     const [rows] = await db.query('SELECT id, name, age, major, email FROM students WHERE id = ?', [studentId]); // Include email
@@ -15,8 +33,8 @@ router.get('/', authenticateToken, async (req, res) => {
     } else {
       res.status(404).json({ message: 'Student not found' });
     }
-  } catch (error) {
-    console.error('Error fetching student profile:', error);
+  } catch (err) {
+    console.error('Error fetching student profile:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });

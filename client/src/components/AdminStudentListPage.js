@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/globalStyles.css';
 
 const AdminStudentListPage = () => {
-  const navigate = useNavigate();
   const [students, setStudents] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
