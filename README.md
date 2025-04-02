@@ -39,7 +39,7 @@ https://github.com/user-attachments/assets/beabf4cc-eea9-4f51-98b0-36c6211230fc
 3. Start the backend server in development mode:
 
    ```bash
-   npm run dev
+   npm start
    ```
 
 ### Running the Frontend
