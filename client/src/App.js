@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom'; 
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Login from './components/Login';
 import StudentHome from './components/StudentHome';
 import CoursesList from './components/CoursesList';
@@ -13,7 +13,11 @@ import AdminStudentListPage from './components/AdminStudentListPage';
 import AdminCourseListPage from './components/AdminCourseListPage';
 import AdminWaitlistPage from './components/AdminWaitlistPage';
 import AdminStudentProfilePage from './components/AdminStudentProfilePage';
-import AdminStudentEnrollmentsPage from './components/AdminStudentEnrollmentsPage';
+import AdminCompletedCoursesPage from './components/AdminCompletedCoursesPage'; // Import the new component
+import Register from './components/Register'; // Import Register
+import { Navigate } from 'react-router-dom';
+
+
 
 // Import the global CSS file
 import './styles/globalStyles.css'; // Ensure the correct path to your CSS file
@@ -23,7 +27,7 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
   const [notificationCount, setNotificationCount] = useState(0);
   const [userRole, setUserRole] = useState('');
-  const location = useLocation(); 
+  const location = useLocation();
 
   const toggleTheme = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark';
@@ -98,7 +102,7 @@ function App() {
       return;
     }
 
-    const decodedToken = JSON.parse(atob(token.split('.')[1])); 
+    const decodedToken = JSON.parse(atob(token.split('.')[1]));
     const studentId = decodedToken.id;
     fetchNotificationCount(studentId);
   }, [isLoggedIn]);
@@ -112,7 +116,7 @@ function App() {
   return (
     <>
       {/* Global Styles are already applied by CSS import */}
-      
+
       {isLoggedIn && (
         <NavBar
           theme={theme}
@@ -136,7 +140,10 @@ function App() {
         <Route path="/course-list" element={<AdminCourseListPage theme={theme} />} />
         <Route path="/waitlist" element={<AdminWaitlistPage theme={theme} />} />
         <Route path="/students/:studentId" element={<AdminStudentProfilePage theme={theme} />} />
-        <Route path="/admin/students/:studentId/enrollments" element={<AdminStudentEnrollmentsPage />} />
+        {/* Add the new route for completed courses */}
+        <Route path="/admin/students/:studentId/completed-courses" element={<AdminCompletedCoursesPage theme={theme} />} />
+        <Route path="/register" element={isLoggedIn ? <Navigate to="/home" /> : <Register />} />
+
       </Routes>
     </>
   );

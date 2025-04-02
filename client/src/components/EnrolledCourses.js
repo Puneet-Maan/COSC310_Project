@@ -18,8 +18,8 @@ function EnrolledCourses() {
         const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode the token to extract the payload
         const studentId = decodedToken.id; // Get the user ID from the decoded token
 
-        // Fetch the enrolled courses for the logged-in student
-        const response = await fetch(`http://localhost:3000/courses/enrolled-courses/${studentId}`);
+        // Fetch the enrolled courses for the logged-in student (ensure fresh data)
+        const response = await fetch(`http://localhost:3000/courses/enrolled-courses/${studentId}?timestamp=${Date.now()}`);
         const data = await response.json();
 
         // Check if the response is valid
@@ -35,7 +35,7 @@ function EnrolledCourses() {
     };
 
     fetchEnrolledCourses();
-  }, []);
+  }, []); // Empty dependency array ensures this only runs once on component mount
 
   const handleDrop = async (courseId) => {
     try {

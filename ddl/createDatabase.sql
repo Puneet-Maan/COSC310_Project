@@ -1,4 +1,4 @@
-CREATE DATABASE studentPortal;
+CREATE DATABASE nullPointersDatabase;
 
 
 CREATE TABLE users (
@@ -20,24 +20,6 @@ CREATE TABLE students (
      );
 
 
-CREATE TABLE courses (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    description TEXT
-);
-
-
-
-CREATE TABLE enrollments (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    student_id INT,
-    course_id INT,
-    grade INT CHECK (grade >= 0 AND grade <= 100),
-    FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
-    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
-);
-
-
 
 INSERT INTO users (username, password, role)
 VALUES
@@ -50,24 +32,7 @@ VALUES
     ('John Doe', 'johndoe@example.com', 20, 'Computer Science', 1),
     ('Jane Smith', 'janesmith@example.com', 22, 'Mathematics', 2);
 
-INSERT INTO courses (name, description)
-VALUES
-    ('Introduction to Programming', 'Learn the basics of programming.'),
-    ('Advanced Mathematics', 'Dive deep into mathematical concepts.');
 
-INSERT INTO enrollments (student_id, course_id)
-VALUES
-    (1, 1),
-    (2, 2);
-
-
-ALTER TABLE enrollments DROP FOREIGN KEY enrollments_ibfk_2;
-
-
-DROP TABLE courses;
-
-
-DROP TABLE enrollments;
 
 CREATE TABLE courses (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -83,7 +48,6 @@ CREATE TABLE enrollments (
     id INT AUTO_INCREMENT PRIMARY KEY,
     student_id INT NOT NULL,
     course_id INT NOT NULL,
-    grade INT CHECK (grade >= 0 AND grade <= 100),
     FOREIGN KEY (student_id) REFERENCES users(id),
     FOREIGN KEY (course_id) REFERENCES courses(id),
     UNIQUE (student_id, course_id)
@@ -110,15 +74,6 @@ CREATE TABLE calendar_events (
 );
 
 
-INSERT INTO courses (name, code, instructor, schedule, capacity, enrolled)
-VALUES ('Testing Course', 'TEST101', 'Dr. Test', 'Mon 10:00 AM - 11:00 AM', 1, 0);
-
-INSERT INTO courses (name, code, instructor, schedule, capacity, enrolled) VALUES
-    ('Introduction to Programming', 'CS101', 'Dr. Alice', 'Mon/Wed/Fri 10:00 AM - 11:30 AM', 30, 0),
-    ('Data Structures', 'CS201', 'Dr. Bob', 'Tue/Thu 1:00 PM - 2:30 PM', 25, 0),
-    ('Machine Learning', 'CS301', 'Dr. Carol', 'Mon/Wed 3:00 PM - 4:30 PM', 20, 0),
-    ('Web Development', 'CS401', 'Dr. Eve', 'Fri 1:00 PM - 4:00 PM', 15, 0), 
-    ('Database Systems', 'CS501', 'Dr. Dave', 'Tue/Thu 10:00 AM - 11:30 AM', 20, 0);
 
 ALTER TABLE users ADD CONSTRAINT UNIQUE (username);
 
@@ -141,4 +96,37 @@ CREATE TABLE notifications (
     PRIMARY KEY (id),
     FOREIGN KEY (student_id) REFERENCES students(id)
 );
+
+
+INSERT INTO courses (name, code, instructor, schedule, capacity, enrolled) VALUES
+         ('Introduction to Programming', 'CS101', 'Dr. Alice', 'Mon/Wed/Fri 10:00 AM - 11:30 AM', 30, 0),
+         ('Data Structures', 'CS201', 'Dr. Bob', 'Tue/Thu 1:00 PM - 2:30 PM', 25, 0),
+         ('Machine Learning', 'CS301', 'Dr. Carol', 'Mon/Wed 3:00 PM - 4:30 PM', 20, 0),
+         ('Web Development', 'CS401', 'Dr. Eve', 'Fri 1:00 PM - 4:00 PM', 15, 0), 
+         ('Database Systems', 'CS501', 'Dr. Dave', 'Tue/Thu 10:00 AM - 11:30 AM', 20, 0);
+
+
+INSERT INTO courses (name, code, instructor, schedule, capacity, enrolled)
+VALUES ('Testing Course', 'TEST101', 'Dr. Test', 'Mon 10:00 AM - 11:00 AM', 1, 0);
+
+
+CREATE TABLE completed_courses (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    course_id INT NOT NULL,
+    completion_date DATE NOT NULL,
+    grade VARCHAR(10), -- Optional: You might want to store the grade received
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+    UNIQUE (student_id, course_id) -- Ensure a student can't have the same course marked as completed multiple times
+);
+
+ALTER TABLE courses
+     ADD COLUMN credits INT UNSIGNED;
+
+
+ALTER TABLE users
+     ADD COLUMN email VARCHAR(255);
+
+
 

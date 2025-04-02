@@ -9,7 +9,7 @@ const courseEnrollmentRoutes = require('./routes/courses/enrollment'); // Update
 const courseWaitlistRoutes = require('./routes/courses/waitlist'); // Updated path
 const calendarRoutes = require('./routes/calendar');
 const adminRoutes = require('./routes/admin');
-const printReport = require('./routes/printReport'); // Updated path
+const gradesRoutes = require('./routes/grades');
 
 // Enable CORS for all origins
 app.use(cors());
@@ -25,18 +25,8 @@ app.use('/courses', courseEnrollmentRoutes);
 app.use('/courses', courseWaitlistRoutes);
 app.use('/calendar', calendarRoutes);
 app.use('/admin', adminRoutes);
-app.use('/enrollments', courseEnrollmentRoutes); // Register only once
-app.use('/report', printReport); // Updated path
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: 'Something broke!' });
-});
+app.use('/api/grades', gradesRoutes); // Mount the grades route at /api/grades
 
-// Catch-all route for unhandled requests
-app.use((req, res) => {
-  console.log(`Unhandled request: ${req.method} ${req.url}`);
-  res.status(404).json({ message: 'Not Found' });
-});
 
+// Start the server
 app.listen(3000, () => console.log('Server is running on port 3000'));

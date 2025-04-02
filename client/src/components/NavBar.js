@@ -14,10 +14,10 @@ function NavBar({ isLoggedIn, handleLogout, notificationCount }) {
         const decodedToken = JSON.parse(atob(token.split('.')[1]));
         const userId = decodedToken.id;
         setUserRole(decodedToken.role || '');
-
-        // Fetch user data from the '/profile/:id' endpoint
-        const fetchUserData = async () => {
-          try {
+  
+        if (decodedToken.role !== 'admin') {
+          // Fetch user data from the '/profile/:id' endpoint for students
+          const fetchUserData = async () => {
             const response = await fetch(`http://localhost:3000/profile/${userId}`, {
               method: 'GET',
               headers: {
@@ -25,25 +25,26 @@ function NavBar({ isLoggedIn, handleLogout, notificationCount }) {
                 'Authorization': `Bearer ${token}`,
               },
             });
-
+  
             if (response.ok) {
               const userData = await response.json();
               setUserName(userData.name || decodedToken.username); // Use 'name' or fallback to 'username'
             } else {
               console.error('Failed to fetch user data');
             }
-          } catch (error) {
-            console.error('Error fetching user data:', error);
-          }
-        };
-
-        fetchUserData();
+          };
+  
+          fetchUserData();
+        } else {
+          // Use username from the decoded token for admins
+          setUserName(decodedToken.username);
+        }
       } catch (error) {
         console.error('Error decoding token:', error);
         setUserRole('');
       }
     }
-
+  
     // Dynamically set padding to avoid overlap
     const navbar = document.querySelector('.nav-wrapper');
     if (navbar) {

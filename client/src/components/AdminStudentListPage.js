@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import '../styles/globalStyles.css'; // Import the global styles
+import '../styles/globalStyles.css';
 
 const AdminStudentListPage = () => {
   const navigate = useNavigate();
@@ -13,15 +13,15 @@ const AdminStudentListPage = () => {
   const [modalType, setModalType] = useState('');
   const [currentStudent, setCurrentStudent] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [enrollments, setEnrollments] = useState([]);
+  const navigate = useNavigate();
 
-  // Fetch Students
   useEffect(() => {
     const fetchStudents = async () => {
       try {
         const token = localStorage.getItem('token');
         if (!token) {
           setError('You are not logged in.');
+          setLoading(false);
           return;
         }
 
@@ -38,7 +38,8 @@ const AdminStudentListPage = () => {
           setStudents(data);
           setFilteredStudents(data);
         } else {
-          setError('Failed to fetch students data. Please try again later.');
+          const errorData = await response.json();
+          setError(`Failed to fetch students data. Status: ${response.status}, Message: ${JSON.stringify(errorData)}`);
         }
       } catch (error) {
         console.error('Error fetching students:', error);
@@ -51,7 +52,6 @@ const AdminStudentListPage = () => {
     fetchStudents();
   }, []);
 
-  // Handle search queries
   const handleSearch = (event) => {
     const query = event.target.value.toLowerCase();
     setSearchQuery(query);
@@ -65,42 +65,16 @@ const AdminStudentListPage = () => {
     setFilteredStudents(filtered);
   };
 
-  // Delete Student
-  const handleDelete = async (id) => {
-    try {
-      const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:3000/admin/students/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setStudents(students.filter((student) => student.id !== id));
-      setFilteredStudents(filteredStudents.filter((student) => student.id !== id));
-      alert('Student deleted successfully!');
-    } catch (err) {
-     // console.error('Error deleting student:', err);
-      alert('Failed to delete student. Please try again.');
-    }
+  const handleViewProfile = (studentId) => {
+    navigate(`/students/${studentId}`);
   };
 
-  // Open Modal for Editing
-  const handleEdit = (student) => {
-    setModalType('edit');
-    setCurrentStudent(student);
-    setShowModal(true);
-  };
-
-  // Open Modal for Adding
   const handleAdd = () => {
     setModalType('add');
-    setCurrentStudent({
-      name: '',
-      email: '',
-      age: '',
-      major: '',
-    });
+    setCurrentStudent({ name: '', email: '', age: '', major: '' });
     setShowModal(true);
   };
 
-  // Save Student (Add or Edit)
   const handleSave = async () => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -110,22 +84,7 @@ const AdminStudentListPage = () => {
 
     try {
       let response;
-      if (modalType === 'edit') {
-        response = await axios.put(
-          `http://localhost:3000/admin/students/${currentStudent.id}`,
-          currentStudent,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-
-        if (response.status === 200) {
-          const updatedStudents = students.map((student) =>
-            student.id === currentStudent.id ? { ...response.data } : student
-          );
-          setStudents(updatedStudents);
-          setFilteredStudents(updatedStudents);
-          alert('Student updated successfully!');
-        }
-      } else if (modalType === 'add') {
+      if (modalType === 'add') {
         response = await axios.post(
           'http://localhost:3000/admin/students',
           currentStudent,
@@ -137,19 +96,16 @@ const AdminStudentListPage = () => {
           setStudents((prevStudents) => [...prevStudents, addedStudent]);
           setFilteredStudents((prevStudents) => [...prevStudents, addedStudent]);
           alert('Student added successfully!');
+          setShowModal(false);
+        } else {
+          const errorData = response.data;
+          alert(`Failed to add student. Status: ${response.status}, Message: ${JSON.stringify(errorData)}`);
         }
       }
     } catch (err) {
-      console.error(`Error ${modalType === 'edit' ? 'updating' : 'adding'} student:`, err);
-      alert(`Failed to ${modalType === 'edit' ? 'update' : 'add'} student. Please try again.`);
-    } finally {
-      setShowModal(false);
+      console.error('Error adding student:', err);
+      alert('Failed to add student. Please try again.');
     }
-  };
-
-  // Replace fetchEnrollments with navigation
-  const viewEnrollments = (studentId) => {
-    navigate(`/admin/students/${studentId}/enrollments`);
   };
 
   if (loading) {
@@ -164,7 +120,6 @@ const AdminStudentListPage = () => {
     <div className="admin-course-list-page">
       <h1 className="page-title">Admin - Student Management</h1>
 
-      {/* Search Bar Section */}
       <div className="search-container">
         <input
           type="text"
@@ -175,14 +130,12 @@ const AdminStudentListPage = () => {
         />
       </div>
 
-      {/* Add Student Button */}
       <div className="action-buttons">
         <button className="btn-primary" onClick={handleAdd}>
           Add New Student
         </button>
       </div>
 
-      {/* Students Table Section */}
       <div className="table-container">
         <table className="students-table">
           <thead>
@@ -204,17 +157,8 @@ const AdminStudentListPage = () => {
                 <td>{student.age}</td>
                 <td>{student.major}</td>
                 <td className="action-buttons">
-                <button 
-                    className="view-enrollments-button" 
-                    onClick={() => viewEnrollments(student.id)}
-                  >
-                    View Enrollments
-                  </button>
-                  <button className="edit-button" onClick={() => handleEdit(student)}>
-                    Edit
-                  </button>
-                  <button className="delete-button" onClick={() => handleDelete(student.id)}>
-                    Delete
+                  <button className="edit-button" onClick={() => handleViewProfile(student.id)}>
+                    View Profile
                   </button>
                 </td>
               </tr>
@@ -223,66 +167,63 @@ const AdminStudentListPage = () => {
         </table>
       </div>
 
-{/* Modal for Add/Edit Student */}
-{showModal && (
-  <div className="modal">
-    <div className="modal-form">
-      {/* Title above the form */}
-      <h2>{modalType === 'edit' ? 'Edit Student' : 'Add New Student'}</h2>
-      <div className="modal-form-content">
-        <label>
-          Name:
-          <input
-            type="text"
-            value={currentStudent.name}
-            onChange={(e) =>
-              setCurrentStudent({ ...currentStudent, name: e.target.value })
-            }
-          />
-        </label>
-        <label>
-          Email:
-          <input
-            type="email"
-            value={currentStudent.email}
-            onChange={(e) =>
-              setCurrentStudent({ ...currentStudent, email: e.target.value })
-            }
-          />
-        </label>
-        <label>
-          Age:
-          <input
-            type="number"
-            value={currentStudent.age}
-            onChange={(e) =>
-              setCurrentStudent({ ...currentStudent, age: parseInt(e.target.value) })
-            }
-          />
-        </label>
-        <label>
-          Major:
-          <input
-            type="text"
-            value={currentStudent.major}
-            onChange={(e) =>
-              setCurrentStudent({ ...currentStudent, major: e.target.value })
-            }
-          />
-        </label>
-      </div>
-      <div className="modal-buttons">
-        <button className="btn-primary" onClick={handleSave}>
-          Save
-        </button>
-        <button className="cancel-button" onClick={() => setShowModal(false)}>
-          Cancel
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
+      {showModal && modalType === 'add' && (
+        <div className="modal">
+          <div className="modal-form">
+            <h2>Add New Student</h2>
+            <div className="modal-form-content">
+              <label>
+                Name:
+                <input
+                  type="text"
+                  value={currentStudent.name}
+                  onChange={(e) =>
+                    setCurrentStudent({ ...currentStudent, name: e.target.value })
+                  }
+                />
+              </label>
+              <label>
+                Email:
+                <input
+                  type="email"
+                  value={currentStudent.email}
+                  onChange={(e) =>
+                    setCurrentStudent({ ...currentStudent, email: e.target.value })
+                  }
+                />
+              </label>
+              <label>
+                Age:
+                <input
+                  type="number"
+                  value={currentStudent.age}
+                  onChange={(e) =>
+                    setCurrentStudent({ ...currentStudent, age: parseInt(e.target.value) })
+                  }
+                />
+              </label>
+              <label>
+                Major:
+                <input
+                  type="text"
+                  value={currentStudent.major}
+                  onChange={(e) =>
+                    setCurrentStudent({ ...currentStudent, major: e.target.value })
+                  }
+                />
+              </label>
+            </div>
+            <div className="modal-buttons">
+              <button className="btn-primary" onClick={handleSave}>
+                Save
+              </button>
+              <button className="cancel-button" onClick={() => setShowModal(false)}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
