@@ -5,6 +5,7 @@ function CourseItem({
   course,
   enrolledCourses,
   waitlistedCourses,
+  completedCourses,
   handleEnroll,
   handleRemoveFromWaitlist,
 }) {
@@ -20,6 +21,10 @@ function CourseItem({
           <button className="btn-disabled" disabled>
             Already Enrolled
           </button>
+        ) : completedCourses.includes(course.id) ? (
+          <button className="btn-disabled" disabled>
+            Completed
+          </button>
         ) : waitlistedCourses.includes(course.id) ? (
           <button
             className="cancel-button"
@@ -31,7 +36,7 @@ function CourseItem({
           <button className="join-waitlist" onClick={() => handleEnroll(course.id)}>
             Join Waitlist
           </button>
-        ) : ( 
+        ) : (
           <button className="btn-primary" onClick={() => handleEnroll(course.id)}>
             Enroll
           </button>
@@ -46,13 +51,14 @@ function CoursesList() {
   const [courses, setCourses] = useState([]);
   const [enrolledCourses, setEnrolledCourses] = useState([]); // Tracks IDs of enrolled courses
   const [waitlistedCourses, setWaitlistedCourses] = useState([]); // Tracks IDs of waitlisted courses
+  const [completedCourses, setCompletedCourses] = useState([]); // Tracks IDs of completed courses
   const [message, setMessage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch('http://localhost:3000/courses');
+        const response = await fetch(`http://localhost:3000/courses?timestamp=${Date.now()}`);
         const data = await response.json();
         setCourses(data);
       } catch (error) {
@@ -63,7 +69,7 @@ function CoursesList() {
 
     const fetchEnrolledCourses = async (studentId) => {
       try {
-        const response = await fetch(`http://localhost:3000/courses/enrolled-courses/${studentId}`);
+        const response = await fetch(`http://localhost:3000/courses/enrolled-courses/${studentId}?timestamp=${Date.now()}`);
         const data = await response.json();
         setEnrolledCourses(data.map((course) => course.id)); // Extract IDs of enrolled courses
       } catch (error) {
@@ -74,12 +80,29 @@ function CoursesList() {
 
     const fetchWaitlistedCourses = async (studentId) => {
       try {
-        const response = await fetch(`http://localhost:3000/courses/waitlisted-courses/${studentId}`);
+        const response = await fetch(`http://localhost:3000/courses/waitlisted-courses/${studentId}?timestamp=${Date.now()}`);
         const data = await response.json();
         setWaitlistedCourses(data.map((course) => course.id)); // Extract IDs of waitlisted courses
       } catch (error) {
         console.error('Error fetching waitlisted courses:', error);
         setMessage('Failed to fetch waitlisted courses. Please try again.');
+      }
+    };
+
+    const fetchCompletedCourses = async (studentId) => {
+      try {
+        const response = await fetch(`http://localhost:3000/profile/${studentId}/completed-courses?timestamp=${Date.now()}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        const data = await response.json();
+        setCompletedCourses(data.map((course) => course.course_id)); // Extract IDs of completed courses
+      } catch (error) {
+        console.error('Error fetching completed courses:', error);
+        setMessage('Failed to fetch completed courses. Please try again.');
       }
     };
 
@@ -98,6 +121,7 @@ function CoursesList() {
     fetchCourses();
     fetchEnrolledCourses(studentId);
     fetchWaitlistedCourses(studentId);
+    fetchCompletedCourses(studentId);
   }, []);
 
   // Handle enrollment or adding to waitlist
@@ -132,7 +156,7 @@ function CoursesList() {
         }
 
         // Refetch courses to reflect the updated seats
-        const updatedCoursesResponse = await fetch('http://localhost:3000/courses');
+        const updatedCoursesResponse = await fetch(`http://localhost:3000/courses?timestamp=${Date.now()}`);
         const updatedCourses = await updatedCoursesResponse.json();
         setCourses(updatedCourses);
       }
@@ -169,7 +193,7 @@ function CoursesList() {
         setWaitlistedCourses((prev) => prev.filter((id) => id !== courseId));
 
         // Refetch courses to reflect the updated seats
-        const updatedCoursesResponse = await fetch('http://localhost:3000/courses');
+        const updatedCoursesResponse = await fetch(`http://localhost:3000/courses?timestamp=${Date.now()}`);
         const updatedCourses = await updatedCoursesResponse.json();
         setCourses(updatedCourses);
       }
@@ -181,12 +205,10 @@ function CoursesList() {
 
   return (
     <div className="admin-course-list-page">
-      
       <h1 className="page-title">Course List</h1>
 
-            {/* Message Display */}
-            {message && <div className="error-message">{message}</div>}
-      
+      {/* Message Display */}
+      {message && <div className="error-message">{message}</div>}
 
       {/* Search Bar Section */}
       <div className="search-container">
@@ -199,59 +221,54 @@ function CoursesList() {
         />
       </div>
 
-
-
-{/* Waitlist Section */}
-<div className="table-container">
-  <h2>Your Waitlisted Courses</h2>
-  {waitlistedCourses.length > 0 ? (
-    <table className="students-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Course Name</th>
-          <th>Instructor</th>
-          <th>Schedule</th>
-          <th>Seats Left</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {waitlistedCourses.map((courseId) => {
-          const course = courses.find((c) => c.id === courseId);
-          return (
-            <tr key={courseId}>
-              <td>{course ? course.id : 'N/A'}</td>
-              <td>{course ? course.name : 'Course not found'}</td>
-              <td>{course ? course.instructor : 'Instructor not available'}</td>
-              <td>{course ? course.schedule : 'Schedule not available'}</td>
-              <td>{course ? course.capacity - course.enrolled : 'N/A'} seats left</td>
-              <td>
-                <button
-                  className="cancel-button"
-                  onClick={() => handleRemoveFromWaitlist(courseId)}
-                >
-                  Remove from Waitlist
-                </button>
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
-  ) : (
-    <p>You are not waitlisted for any courses.</p>
-  )}
-</div>
-
-
+      {/* Waitlist Section */}
+      <div className="table-container">
+        <h2>Your Waitlisted Courses</h2>
+        {waitlistedCourses.length > 0 ? (
+          <table className="students-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Course Name</th>
+                <th>Instructor</th>
+                <th>Schedule</th>
+                <th>Seats Left</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {waitlistedCourses.map((courseId) => {
+                const course = courses.find((c) => c.id === courseId);
+                return (
+                  <tr key={courseId}>
+                    <td>{course ? course.id : 'N/A'}</td>
+                    <td>{course ? course.name : 'Course not found'}</td>
+                    <td>{course ? course.instructor : 'Instructor not available'}</td>
+                    <td>{course ? course.schedule : 'Schedule not available'}</td>
+                    <td>{course ? course.capacity - course.enrolled : 'N/A'} seats left</td>
+                    <td>
+                      <button
+                        className="cancel-button"
+                        onClick={() => handleRemoveFromWaitlist(courseId)}
+                      >
+                        Remove from Waitlist
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        ) : (
+          <p>You are not waitlisted for any courses.</p>
+        )}
+      </div>
 
       {/* Courses Table Section */}
       <div className="table-container">
-      <h2>All Courses</h2>
+        <h2>All Courses</h2>
 
         <table className="students-table">
-          
           <thead>
             <tr>
               <th>ID</th>
@@ -273,6 +290,7 @@ function CoursesList() {
                   course={course}
                   enrolledCourses={enrolledCourses}
                   waitlistedCourses={waitlistedCourses}
+                  completedCourses={completedCourses}
                   handleEnroll={handleEnroll}
                   handleRemoveFromWaitlist={handleRemoveFromWaitlist}
                 />
@@ -280,8 +298,6 @@ function CoursesList() {
           </tbody>
         </table>
       </div>
-
-
     </div>
   );
 }

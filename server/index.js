@@ -9,6 +9,7 @@ const courseEnrollmentRoutes = require('./routes/courses/enrollment'); // Update
 const courseWaitlistRoutes = require('./routes/courses/waitlist'); // Updated path
 const calendarRoutes = require('./routes/calendar');
 const adminRoutes = require('./routes/admin');
+const gradesRoutes = require('./routes/grades');
 
 // Enable CORS for all origins
 app.use(cors());
@@ -24,6 +25,8 @@ app.use('/courses', courseEnrollmentRoutes);
 app.use('/courses', courseWaitlistRoutes);
 app.use('/calendar', calendarRoutes);
 app.use('/admin', adminRoutes);
+app.use('/api/grades', gradesRoutes); // Mount the grades route at /api/grades
+
 
 // Start the server
 app.listen(3000, () => console.log('Server is running on port 3000'));

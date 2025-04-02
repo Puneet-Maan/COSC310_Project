@@ -17,7 +17,7 @@ router.get('/:student_id', async (req, res) => {
 
     // Check if no events are found
     if (events.length === 0) {
-      return res.status(404).json({ message: 'No events found for this student.' });
+      return res.status(404).json({ message: 'You are not enrolled in any course.' });
     }
 
     // Format events to return in a simpler way (using just date, start time, and end time)

@@ -2,15 +2,16 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import '../styles/globalStyles.css'; // Import the global styles
 
-const AdminStudentCoursePage = () => {
+const AdminCourseListPage = () => {
   const [courses, setCourses] = useState([]);
   const [filteredCourses, setFilteredCourses] = useState([]);
-  const [searchQuery, setSearchQuery] = useState(''); 
+  const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [modalType, setModalType] = useState('');
-  const [currentCourse, setCurrentCourse] = useState(null); 
+  const [currentCourse, setCurrentCourse] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [deleteConfirmationId, setDeleteConfirmationId] = useState(null);
 
   // Fetch Courses
   useEffect(() => {
@@ -35,7 +36,8 @@ const AdminStudentCoursePage = () => {
           setCourses(data);
           setFilteredCourses(data);
         } else {
-          setError('Failed to fetch courses data. Please try again later.');
+          const errorData = await response.json();
+          setError(`Failed to fetch courses data. Status: ${response.status}, Message: ${errorData?.message || 'Unknown error'}`);
         }
       } catch (error) {
         console.error('Error fetching courses:', error);
@@ -62,6 +64,15 @@ const AdminStudentCoursePage = () => {
     setFilteredCourses(filtered);
   };
 
+  // Delete Course Confirmation
+  const confirmDelete = (id) => {
+    setDeleteConfirmationId(id);
+  };
+
+  const cancelDelete = () => {
+    setDeleteConfirmationId(null);
+  };
+
   // Delete Course
   const handleDelete = async (id) => {
     try {
@@ -72,6 +83,7 @@ const AdminStudentCoursePage = () => {
       setCourses(courses.filter((course) => course.id !== id));
       setFilteredCourses(filteredCourses.filter((course) => course.id !== id));
       alert('Course deleted successfully!');
+      setDeleteConfirmationId(null);
     } catch (err) {
       console.error('Error deleting course:', err);
       alert('Failed to delete course. Please try again.');
@@ -81,7 +93,7 @@ const AdminStudentCoursePage = () => {
   // Open Modal for Editing
   const handleEdit = (course) => {
     setModalType('edit');
-    setCurrentCourse(course);
+    setCurrentCourse({ ...course }); // Create a copy to avoid direct state modification
     setShowModal(true);
   };
 
@@ -94,9 +106,18 @@ const AdminStudentCoursePage = () => {
       instructor: '',
       schedule: '',
       capacity: 0,
-      enrolled: 0,
+      credits: 0, // Initialize credits for adding
     });
     setShowModal(true);
+  };
+
+  // Update currentCourse state on input change
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setCurrentCourse((prevCourse) => ({
+      ...prevCourse,
+      [name]: value,
+    }));
   };
 
   // Save Course (Add or Edit)
@@ -121,7 +142,7 @@ const AdminStudentCoursePage = () => {
             course.id === currentCourse.id ? { ...response.data } : course
           );
           setCourses(updatedCourses);
-          setFilteredCourses(updatedCourses); 
+          setFilteredCourses(updatedCourses);
           alert('Course updated successfully!');
         }
       } else if (modalType === 'add') {
@@ -184,6 +205,7 @@ const AdminStudentCoursePage = () => {
               <th>ID</th>
               <th>Name</th>
               <th>Code</th>
+              <th>Credits</th> {/* Moved here */}
               <th>Instructor</th>
               <th>Schedule</th>
               <th>Capacity</th>
@@ -197,6 +219,7 @@ const AdminStudentCoursePage = () => {
                 <td>{course.id}</td>
                 <td>{course.name}</td>
                 <td>{course.code}</td>
+                <td>{course.credits}</td> {/* Moved here */}
                 <td>{course.instructor}</td>
                 <td>{course.schedule}</td>
                 <td>{course.capacity}</td>
@@ -205,9 +228,21 @@ const AdminStudentCoursePage = () => {
                   <button className="edit-button" onClick={() => handleEdit(course)}>
                     Edit
                   </button>
-                  <button className="delete-button" onClick={() => handleDelete(course.id)}>
-                    Delete
-                  </button>
+                  {deleteConfirmationId === course.id ? (
+                    <div className="delete-confirmation">
+                      <p>Are you sure?</p>
+                      <button className="delete-button confirm" onClick={() => handleDelete(course.id)}>
+                        Yes
+                      </button>
+                      <button className="cancel-button" onClick={cancelDelete}>
+                        No
+                      </button>
+                    </div>
+                  ) : (
+                    <button className="delete-button" onClick={() => confirmDelete(course.id)}>
+                      Delete
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}
@@ -218,70 +253,75 @@ const AdminStudentCoursePage = () => {
       {/* Modal for Add/Edit Course */}
       {showModal && (
         <div className="modal">
-            <div className="modal-form">
-                {/* Title above the form */}
-             <h2>{modalType === 'edit' ? 'Edit Course' : 'Add New Course'}</h2>
-             <div className="modal-form-content">
-            <label>
-              Name:
-              <input
-                type="text"
-                value={currentCourse.name}
-                onChange={(e) =>
-                  setCurrentCourse({ ...currentCourse, name: e.target.value })
-                }
-              />
-            </label>
-            <label>
-              Code:
-              <input
-                type="text"
-                value={currentCourse.code}
-                onChange={(e) =>
-                  setCurrentCourse({ ...currentCourse, code: e.target.value })
-                }
-              />
-            </label>
-            <label>
-              Instructor:
-              <input
-                type="text"
-                value={currentCourse.instructor}
-                onChange={(e) =>
-                  setCurrentCourse({ ...currentCourse, instructor: e.target.value })
-                }
-              />
-            </label>
-            <label>
-              Schedule:
-              <input
-                type="text"
-                value={currentCourse.schedule}
-                onChange={(e) =>
-                  setCurrentCourse({ ...currentCourse, schedule: e.target.value })
-                }
-              />
-            </label>
-            <label>
-              Capacity:
-              <input
-                type="number"
-                value={currentCourse.capacity}
-                onChange={(e) =>
-                  setCurrentCourse({ ...currentCourse, capacity: parseInt(e.target.value) })
-                }
-              />
-            </label>
-            <label>
-              Enrolled:
-              <input
-                type="number"
-                value={currentCourse.enrolled}
-                onChange={(e) =>
-                  setCurrentCourse({ ...currentCourse, enrolled: parseInt(e.target.value) })
-                }
-              />
-            </label>
+          <div className="modal-form">
+            <h2>{modalType === 'edit' ? 'Edit Course' : 'Add New Course'}</h2>
+            <div className="modal-form-content">
+              <label>
+                Name:
+                <input
+                  type="text"
+                  name="name"
+                  value={currentCourse?.name || ''}
+                  onChange={handleInputChange}
+                />
+              </label>
+              <label>
+                Code:
+                <input
+                  type="text"
+                  name="code"
+                  value={currentCourse?.code || ''}
+                  onChange={handleInputChange}
+                />
+              </label>
+              <label>
+                Credits:
+                <input
+                  type="number"
+                  name="credits"
+                  value={currentCourse?.credits || 0}
+                  onChange={handleInputChange}
+                />
+              </label>
+              <label>
+                Instructor:
+                <input
+                  type="text"
+                  name="instructor"
+                  value={currentCourse?.instructor || ''}
+                  onChange={handleInputChange}
+                />
+              </label>
+              <label>
+                Schedule:
+                <input
+                  type="text"
+                  name="schedule"
+                  value={currentCourse?.schedule || ''}
+                  onChange={handleInputChange}
+                />
+              </label>
+              <label>
+                Capacity:
+                <input
+                  type="number"
+                  name="capacity"
+                  value={currentCourse?.capacity || 0}
+                  onChange={handleInputChange}
+                />
+              </label>
+              {modalType === 'edit' && (
+                <label>
+                  Enrolled:
+                  <input
+                    type="number"
+                    name="enrolled"
+                    value={currentCourse?.enrolled || 0}
+                    onChange={handleInputChange}
+                    readOnly // Make it read-only for editing
+                  />
+                </label>
+              )}
             </div>
 
             <div className="modal-buttons">
@@ -294,10 +334,27 @@ const AdminStudentCoursePage = () => {
             </div>
           </div>
         </div>
-)}
+      )}
 
+      {/* Delete Confirmation Modal */}
+      {deleteConfirmationId && (
+        <div className="modal">
+          <div className="modal-form">
+            <h2>Confirm Delete</h2>
+            <p>Are you sure you want to delete this course?</p>
+            <div className="modal-buttons">
+              <button className="delete-button confirm" onClick={() => handleDelete(deleteConfirmationId)}>
+                Yes, Delete
+              </button>
+              <button className="cancel-button" onClick={cancelDelete}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default AdminStudentCoursePage;
+export default AdminCourseListPage;
