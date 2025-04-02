@@ -8,14 +8,7 @@ const pool = mysql.createPool({
   database: 'nullPointersDatabase', // Replace with your database name
 });
 
-// Test the database connection
-pool.query('SELECT 1', (err, results) => {
-  if (err) {
-    console.error('Database connection failed:', err);
-  } else {
-    console.log('Database connection successful:', results);
-  }
-});
+const db = pool.promise();
+db.end = () => pool.end(); // Explicitly add a method to close the pool
 
-// Export the pool as a promise
-module.exports = pool.promise();
+module.exports = db;
