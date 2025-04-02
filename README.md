@@ -103,24 +103,27 @@ https://github.com/user-attachments/assets/e5a63c21-69ed-4ab8-9352-2c357acaba9e
 
   1. Ensure the passwords from the database are hashed:
     Navigate to the server folder in your terminal (previous steps explain process) and run the following
-    ```bash
-    node hashPasswords.js
-    ```
+
+   ```bash
+   node hashPasswords.js
+   ```
+
   2. Once succesfully ran the admin login is
        Username: admin1
        Password: adminpass
 
   3. Student Login
      You can succesfully create your own account to view from student perspective but if not the following logins work
-     
-     (John Doe)
+     ```  
+       (John Doe)
      Username: student1
      Password: password123
-
-    (Jane Doe)
+```
+```
+      (Jane Doe)
      Username: student2
      Password: mypassword
-     
+    ```
 
 ### Running Tests
 
