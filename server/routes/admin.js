@@ -276,6 +276,37 @@ router.put('/courses/:id', async (req, res) => {
   }
 });
 
+
+// Route to fetch a student's profile by ID
+router.get('/api/student/:id', async (req, res) => {
+  const studentId = req.params.id;
+
+  try {
+      const [studentData] = await db.query(`
+          SELECT 
+              users.name, 
+              users.gpa, 
+              COUNT(enrollments.course_id) AS total_courses
+          FROM users
+          LEFT JOIN enrollments 
+          ON users.id = enrollments.student_id
+          WHERE users.id = ?
+          GROUP BY users.id
+      `, [studentId]);
+
+      if (studentData) {
+          res.json(studentData);
+      } else {
+          res.status(404).json({ error: "Student not found" });
+      }
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Server error" });
+  }
+});
+
+
+
 // Delete a course
 router.delete('/courses/:id', async (req, res) => {
   const courseId = parseInt(req.params.id);
