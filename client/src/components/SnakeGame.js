@@ -200,7 +200,7 @@ const SnakeGame = () => {
 
   return (
     <div className="snake-game-container-themed">
-      <h3>Mini Snake Game</h3>
+      <h3>Snake Game</h3>
       <p>Score: {score}</p>
       <canvas
         ref={canvasRef}
