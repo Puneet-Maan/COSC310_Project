@@ -35,49 +35,6 @@ function App() {
     localStorage.setItem('theme', newTheme); // Optionally save theme in localStorage
   };
 
-  
-
-  function App() {
-    const [studentProfile, setStudentProfile] = useState(null);
-    const [showProfile, setShowProfile] = useState(false);
-
-    const viewStudentProfile = async (studentId) => {
-        try {
-            const response = await fetch(`/api/student/${studentId}`);
-            const data = await response.json();
-
-            if (data.error) {
-                alert(data.error);
-            } else {
-                setStudentProfile(data);
-                setShowProfile(true);
-            }
-        } catch (error) {
-            console.error('Error fetching student profile:', error);
-        }
-    };
-
-    return (
-        <div className="App">
-            <h1>Student Browser</h1>
-            <div>
-                <button onClick={() => viewStudentProfile('1')}>View Student 1 Profile</button>
-                <button onClick={() => viewStudentProfile('2')}>View Student 2 Profile</button>
-            </div>
-            
-            {showProfile && studentProfile && (
-                <div className="student-profile">
-                    <h3>{studentProfile.name}'s Profile</h3>
-                    <p>GPA: {studentProfile.gpa}</p>
-                    <p>Total Courses Enrolled: {studentProfile.total_courses}</p>
-                    <button onClick={() => setShowProfile(false)}>Close</button>
-                </div>
-            )}
-        </div>
-    );
-}
-
-
   useEffect(() => {
     // Get saved theme from localStorage if exists
     const savedTheme = localStorage.getItem('theme');
