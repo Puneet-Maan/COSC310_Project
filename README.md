@@ -4,10 +4,14 @@
 </div>
 
 ### Student Perspective
-https://github.com/user-attachments/assets/81bb1362-4be1-41dd-930e-d2d3c733ea56
+https://github.com/user-attachments/assets/0b1c837f-fd6a-435a-903e-43e83982e057
+
+
 
 ### Admin Perspective
-https://github.com/user-attachments/assets/beabf4cc-eea9-4f51-98b0-36c6211230fc
+https://github.com/user-attachments/assets/e5a63c21-69ed-4ab8-9352-2c357acaba9e
+
+
 
 ### Functional Requirements
  - [x] Administator Login / Logout
@@ -95,9 +99,33 @@ https://github.com/user-attachments/assets/beabf4cc-eea9-4f51-98b0-36c6211230fc
       ```
 7. Copy the contents of the `ddl\createDatabase.sql` file and paste it into the terminal to create the tables and populate them with data.
 
+### Logging In
+
+  1. Ensure the passwords from the database are hashed:
+    Navigate to the server folder in your terminal (previous steps explain process) and run the following
+    ```bash
+    node hashPasswords.js
+    ```
+  2. Once succesfully ran the admin login is
+       Username: admin1
+       Password: adminpass
+
+  3. Student Login
+     You can succesfully create your own account to view from student perspective but if not the following logins work
+     
+     (John Doe)
+     Username: student1
+     Password: password123
+
+    (Jane Doe)
+     Username: student2
+     Password: mypassword
+     
+
 ### Running Tests
 
-![tests](https://github.com/user-attachments/assets/414b7ef7-839b-4efa-b4ee-5c67300f4424)
+![testsPassing](https://github.com/user-attachments/assets/98b25e93-1c71-4e92-8d36-71393e0bb3b1)
+
 
 Currently all tests are up to date and passing successfully.
 
